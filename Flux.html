@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate-key="page.title">GitOps & Flux Visualisiert - Eine Einführung</title>
     <title>GitOps & Flux Visualisiert - Eine Einführung</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -102,38 +103,40 @@
 
     <header class="sticky top-0 z-50 bg-card-light dark:bg-card-dark shadow-md transition-colors duration-300">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
-            <div class="text-xl font-bold text-primary dark:text-primary-dark">
+            <div class="text-xl font-bold text-primary dark:text-primary-dark" data-translate-key="nav.brand">
                 GitOps & Flux
             </div>
             <div class="hidden md:flex space-x-6 items-center">
-                <a href="#einfuehrung" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">Einführung</a>
-                <a href="#quickstart" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">Quick Start</a>
-                <a href="#gitops" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">Was ist GitOps?</a>
-                <a href="#flux" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">Was ist Flux?</a>
-                <a href="#workflow" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">Workflow</a>
-                <a href="#quiz" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">Quiz</a>
-                <a href="#fazit" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">Fazit</a>
-                <button id="dark-mode-toggle" aria-label="Toggle Dark Mode" class="ml-4 text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">
+                <a href="#einfuehrung" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors" data-translate-key="nav.introduction">Einführung</a>
+                <a href="#quickstart" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors" data-translate-key="nav.quickstart">Quick Start</a>
+                <a href="#gitops" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors" data-translate-key="nav.whatisgitops">Was ist GitOps?</a>
+                <a href="#flux" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors" data-translate-key="nav.whatisflux">Was ist Flux?</a>
+                <a href="#workflow" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors" data-translate-key="nav.workflow">Workflow</a>
+                <a href="#quiz" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors" data-translate-key="nav.quiz">Quiz</a>
+                <a href="#fazit" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors" data-translate-key="nav.conclusion">Fazit</a>
+                <button id="language-toggle" aria-label="Toggle Language" class="ml-4 text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors font-medium text-sm">EN</button>
+                <button id="dark-mode-toggle" aria-label="Toggle Dark Mode" class="ml-4 text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors" data-translate-aria-label="nav.toggleDarkMode">
                     <span class="lucide text-xl"></span> </button>
             </div>
             <div class="md:hidden flex items-center">
-                 <button id="dark-mode-toggle-mobile" aria-label="Toggle Dark Mode" class="mr-4 text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">
+                 <button id="language-toggle-mobile" aria-label="Toggle Language" class="mr-4 text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors font-medium text-sm">EN</button>
+                 <button id="dark-mode-toggle-mobile" aria-label="Toggle Dark Mode" class="mr-4 text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors" data-translate-aria-label="nav.toggleDarkMode">
                     <span class="lucide text-xl"></span> </button>
-                <button id="mobile-menu-button" aria-label="Open Menu" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark focus:outline-none">
+                <button id="mobile-menu-button" aria-label="Open Menu" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark focus:outline-none" data-translate-aria-label="nav.openMenu">
                     <span class="lucide text-2xl">&#xe9b2;</span> </button>
             </div>
         </nav>
         <div id="mobile-menu" class="fixed inset-y-0 left-0 w-64 bg-card-light dark:bg-card-dark shadow-lg p-4 transform -translate-x-full md:hidden transition-transform duration-300 ease-in-out z-40">
-             <button id="mobile-close-button" aria-label="Close Menu" class="absolute top-4 right-4 text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark">
+             <button id="mobile-close-button" aria-label="Close Menu" class="absolute top-4 right-4 text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark" data-translate-aria-label="nav.closeMenu">
                  <span class="lucide text-2xl">&#xea11;</span> </button>
             <nav class="mt-10 flex flex-col space-y-4">
-                <a href="#einfuehrung" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link">Einführung</a>
-                <a href="#quickstart" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link">Quick Start</a>
-                <a href="#gitops" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link">Was ist GitOps?</a>
-                <a href="#flux" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link">Was ist Flux?</a>
-                <a href="#workflow" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link">Workflow</a>
-                <a href="#quiz" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link">Quiz</a>
-                <a href="#fazit" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link">Fazit</a>
+                <a href="#einfuehrung" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link" data-translate-key="nav.introduction">Einführung</a>
+                <a href="#quickstart" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link" data-translate-key="nav.quickstart">Quick Start</a>
+                <a href="#gitops" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link" data-translate-key="nav.whatisgitops">Was ist GitOps?</a>
+                <a href="#flux" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link" data-translate-key="nav.whatisflux">Was ist Flux?</a>
+                <a href="#workflow" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link" data-translate-key="nav.workflow">Workflow</a>
+                <a href="#quiz" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link" data-translate-key="nav.quiz">Quiz</a>
+                <a href="#fazit" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link" data-translate-key="nav.conclusion">Fazit</a>
             </nav>
         </div>
     </header>
@@ -142,26 +145,26 @@
 
         <section id="hero" class="text-center py-16 md:py-24">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-text-light dark:text-text-dark">
-                GitOps & Flux <span class="text-primary dark:text-primary-dark">Visualisiert</span>
+                <span data-translate-key="hero.title1">GitOps & Flux</span> <span class="text-primary dark:text-primary-dark" data-translate-key="hero.title2">Visualisiert</span>
             </h1>
-            <p class="text-lg md:text-xl text-muted-light dark:text-muted-dark mb-8 max-w-3xl mx-auto">
+            <p class="text-lg md:text-xl text-muted-light dark:text-muted-dark mb-8 max-w-3xl mx-auto" data-translate-key="hero.subtitle">
                 Ein moderner Ansatz für Continuous Delivery auf Kubernetes. Verstehen Sie die Prinzipien und Werkzeuge, die Ihre Deployments revolutionieren können.
             </p>
-            <a href="#quickstart" class="inline-block bg-primary hover:bg-sky-600 dark:bg-primary-dark dark:hover:bg-sky-500 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-all duration-300">
+            <a href="#quickstart" class="inline-block bg-primary hover:bg-sky-600 dark:bg-primary-dark dark:hover:bg-sky-500 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-all duration-300" data-translate-key="hero.button">
                 Loslegen: Quick Start
             </a>
         </section>
 
         <section id="einfuehrung" class="py-12 md:py-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold mb-6 text-center">Einführung: Die Herausforderung moderner Deployments</h2>
+            <h2 class="text-3xl font-bold mb-6 text-center" data-translate-key="introduction.title">Einführung: Die Herausforderung moderner Deployments</h2>
             <div class="max-w-3xl mx-auto text-lg text-muted-light dark:text-muted-dark space-y-4">
-                <p>
+                <p data-translate-key="introduction.p1">
                     Moderne Anwendungen, insbesondere auf Plattformen wie Kubernetes, bestehen oft aus vielen Komponenten und Konfigurationen. Das Management von Updates, Konsistenz über Umgebungen hinweg und die Nachvollziehbarkeit von Änderungen wird schnell komplex.
                 </p>
-                <p>
+                <p data-translate-key="introduction.p2">
                     Traditionelle CI/CD-Pipelines stoßen hier an Grenzen. Wie können wir sicherstellen, dass der <em>tatsächliche</em> Zustand unserer Infrastruktur und Anwendungen <em>immer</em> dem gewünschten Zustand entspricht, der sicher und nachvollziehbar verwaltet wird?
                 </p>
-                <p class="font-semibold text-text-light dark:text-text-dark">
+                <p class="font-semibold text-text-light dark:text-text-dark" data-translate-key="introduction.p3">
                     Hier kommen GitOps und Werkzeuge wie Flux ins Spiel.
                 </p>
             </div>
@@ -169,48 +172,48 @@
 
         <section id="quickstart" class="py-12 md:py-16 bg-card-light dark:bg-card-dark rounded-lg shadow-lg scroll-mt-20">
             <div class="max-w-4xl mx-auto px-6 lg:px-8">
-                <h2 class="text-3xl font-bold mb-8 text-center">Quick Start Guide: In 5 Minuten mit GitOps starten</h2>
+                <h2 class="text-3xl font-bold mb-8 text-center" data-translate-key="quickstart.title">Quick Start Guide: In 5 Minuten mit GitOps starten</h2>
 
-                <h3 class="text-xl font-semibold mb-4">Voraussetzungen</h3>
+                <h3 class="text-xl font-semibold mb-4" data-translate-key="quickstart.prerequisites.title">Voraussetzungen</h3>
                 <ul class="list-none space-y-2 mb-8 text-muted-light dark:text-muted-dark">
-                    <li class="flex items-center"><span class="lucide text-primary dark:text-primary-dark mr-3">&#xea14;</span> Ein laufender Kubernetes Cluster (z.B. minikube, kind, Cloud-Cluster)</li>
-                    <li class="flex items-center"><span class="lucide text-primary dark:text-primary-dark mr-3">&#xea14;</span> `kubectl` CLI Tool installiert und konfiguriert</li>
-                    <li class="flex items-center"><span class="lucide text-primary dark:text-primary-dark mr-3">&#xea14;</span> Ein Git Repository (z.B. auf GitHub, GitLab)</li>
+                    <li class="flex items-center"><span class="lucide text-primary dark:text-primary-dark mr-3">&#xea14;</span> <span data-translate-key="quickstart.prerequisites.l1">Ein laufender Kubernetes Cluster (z.B. minikube, kind, Cloud-Cluster)</span></li>
+                    <li class="flex items-center"><span class="lucide text-primary dark:text-primary-dark mr-3">&#xea14;</span> <span data-translate-key="quickstart.prerequisites.l2">`kubectl` CLI Tool installiert und konfiguriert</span></li>
+                    <li class="flex items-center"><span class="lucide text-primary dark:text-primary-dark mr-3">&#xea14;</span> <span data-translate-key="quickstart.prerequisites.l3">Ein Git Repository (z.B. auf GitHub, GitLab)</span></li>
                 </ul>
 
-                <h3 class="text-xl font-semibold mb-4">Installation & Bootstrap</h3>
+                <h3 class="text-xl font-semibold mb-4" data-translate-key="quickstart.install.title">Installation & Bootstrap</h3>
                 <div class="space-y-6">
                     <div>
-                        <h4 class="font-medium mb-1">1. Flux CLI installieren</h4>
+                        <h4 class="font-medium mb-1" data-translate-key="quickstart.install.step1.title">1. Flux CLI installieren</h4>
                         <div class="relative">
-                            <pre class="language-bash bg-slate-100 dark:bg-slate-900 text-sm"><code class="language-bash">curl -s https://fluxcd.io/install.sh | sudo bash</code><button class="copy-button bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600">Copy</button></pre>
+                            <pre class="language-bash bg-slate-100 dark:bg-slate-900 text-sm"><code class="language-bash">curl -s https://fluxcd.io/install.sh | sudo bash</code><button class="copy-button bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600" data-translate-key="common.copy">Copy</button></pre>
                         </div>
                     </div>
                     <div>
-                        <h4 class="font-medium mb-1">2. Cluster überprüfen</h4>
+                        <h4 class="font-medium mb-1" data-translate-key="quickstart.install.step2.title">2. Cluster überprüfen</h4>
                          <div class="relative">
-                            <pre class="language-bash bg-slate-100 dark:bg-slate-900 text-sm"><code class="language-bash">flux check --pre</code><button class="copy-button bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600">Copy</button></pre>
+                            <pre class="language-bash bg-slate-100 dark:bg-slate-900 text-sm"><code class="language-bash">flux check --pre</code><button class="copy-button bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600" data-translate-key="common.copy">Copy</button></pre>
                          </div>
                     </div>
                     <div>
-                        <h4 class="font-medium mb-1">3. Flux im Cluster installieren (Bootstrap)</h4>
-                        <p class="text-sm text-muted-light dark:text-muted-dark mb-2">Passt die Werte für `--owner`, `--repository` etc. an eure Umgebung an.</p>
+                        <h4 class="font-medium mb-1" data-translate-key="quickstart.install.step3.title">3. Flux im Cluster installieren (Bootstrap)</h4>
+                        <p class="text-sm text-muted-light dark:text-muted-dark mb-2" data-translate-key="quickstart.install.step3.p1">Passt die Werte für `--owner`, `--repository` etc. an eure Umgebung an.</p>
                          <div class="relative">
-                            <pre class="language-bash bg-slate-100 dark:bg-slate-900 text-sm"><code class="language-bash"># Beispiel für GitHub
-flux bootstrap github \\
-  --owner=$GITHUB_USER \\
-  --repository=mein-cluster-repo \\
-  --branch=main \\
-  --path=./clusters/mein-cluster \\
-  --personal</code><button class="copy-button bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600">Copy</button></pre>
+                            <pre class="language-bash bg-slate-100 dark:bg-slate-900 text-sm"><code class="language-bash"># <span data-translate-key="quickstart.install.step3.codecomment">Beispiel für GitHub</span>
+flux bootstrap github \
+  --owner=$GITHUB_USER \
+  --repository=mein-cluster-repo \
+  --branch=main \
+  --path=./clusters/mein-cluster \
+  --personal</code><button class="copy-button bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600" data-translate-key="common.copy">Copy</button></pre>
                          </div>
-                         <p class="text-sm text-muted-light dark:text-muted-dark mt-2">Dieser Befehl installiert Flux, erstellt Deploy Keys und committet die Flux-Konfiguration in dein Repository.</p>
+                         <p class="text-sm text-muted-light dark:text-muted-dark mt-2" data-translate-key="quickstart.install.step3.p2">Dieser Befehl installiert Flux, erstellt Deploy Keys und committet die Flux-Konfiguration in dein Repository.</p>
                     </div>
                      <div>
-                        <h4 class="font-medium mb-1">4. Beispielanwendung deployen</h4>
-                        <p class="text-sm text-muted-light dark:text-muted-dark mb-2">Füge eine Kubernetes Manifest-Datei (z.B. `nginx-deployment.yaml`) in deinem Git Repository unter dem Pfad hinzu, den du bei `--path` angegeben hast (`./clusters/mein-cluster`). Flux wird diese Änderung erkennen und anwenden.</p>
+                        <h4 class="font-medium mb-1" data-translate-key="quickstart.install.step4.title">4. Beispielanwendung deployen</h4>
+                        <p class="text-sm text-muted-light dark:text-muted-dark mb-2" data-translate-key="quickstart.install.step4.p1">Füge eine Kubernetes Manifest-Datei (z.B. `nginx-deployment.yaml`) in deinem Git Repository unter dem Pfad hinzu, den du bei `--path` angegeben hast (`./clusters/mein-cluster`). Flux wird diese Änderung erkennen und anwenden.</p>
                          <div class="relative">
-                            <pre class="language-yaml bg-slate-100 dark:bg-slate-900 text-sm"><code class="language-yaml"># Beispiel: ./clusters/mein-cluster/nginx-deployment.yaml
+                            <pre class="language-yaml bg-slate-100 dark:bg-slate-900 text-sm"><code class="language-yaml"># <span data-translate-key="quickstart.install.step4.codecomment">Beispiel: ./clusters/mein-cluster/nginx-deployment.yaml</span>
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -229,94 +232,94 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:1.25 # Flux kann auch Image-Updates automatisieren!
+        image: nginx:1.25 # <span data-translate-key="quickstart.install.step4.codecomment2">Flux kann auch Image-Updates automatisieren!</span>
         ports:
-        - containerPort: 80</code><button class="copy-button bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600">Copy</button></pre>
+        - containerPort: 80</code><button class="copy-button bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600" data-translate-key="common.copy">Copy</button></pre>
                          </div>
-                         <p class="text-sm text-muted-light dark:text-muted-dark mt-2">Committe und pushe diese Datei. Flux wird sie nach kurzer Zeit im Cluster deployen!</p>
+                         <p class="text-sm text-muted-light dark:text-muted-dark mt-2" data-translate-key="quickstart.install.step4.p2">Committe und pushe diese Datei. Flux wird sie nach kurzer Zeit im Cluster deployen!</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="gitops" class="py-12 md:py-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold mb-8 text-center">Was ist GitOps?</h2>
+            <h2 class="text-3xl font-bold mb-8 text-center" data-translate-key="gitops.title">Was ist GitOps?</h2>
             <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
                 <div class="bg-card-light dark:bg-card-dark p-6 rounded-lg shadow">
-                    <h3 class="text-xl font-semibold mb-3">Definition</h3>
-                    <p class="text-muted-light dark:text-muted-dark">
+                    <h3 class="text-xl font-semibold mb-3" data-translate-key="gitops.definition.title">Definition</h3>
+                    <p class="text-muted-light dark:text-muted-dark" data-translate-key="gitops.definition.p1">
                         GitOps ist ein Betriebsmodell für Cloud-Native-Anwendungen (insbesondere Kubernetes), das Git als **Single Source of Truth** (einzige Quelle der Wahrheit) für die deklarative Infrastruktur und Anwendungsdefinitionen nutzt. Änderungen am System werden über Git Commits gesteuert und automatisch angewendet.
                     </p>
                 </div>
 
                 <div class="bg-card-light dark:bg-card-dark p-6 rounded-lg shadow">
-                    <h3 class="text-xl font-semibold mb-3">Warum GitOps? (Vorteile)</h3>
+                    <h3 class="text-xl font-semibold mb-3" data-translate-key="gitops.benefits.title">Warum GitOps? (Vorteile)</h3>
                     <ul class="list-none space-y-2 text-muted-light dark:text-muted-dark">
-                        <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <strong>Nachvollziehbarkeit:</strong> Jede Änderung ist ein Git Commit (wer, was, wann).</li>
-                        <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <strong>Konsistenz:</strong> Git definiert den Zustand; Abweichungen werden korrigiert.</li>
-                        <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <strong>Zuverlässigkeit:</strong> Einfache Rollbacks durch `git revert`.</li>
-                        <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <strong>Produktivität:</strong> Entwickler nutzen bekannte Git-Workflows.</li>
-                         <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <strong>Sicherheit:</strong> Änderungen sind auditiert und kontrolliert.</li>
+                        <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <span data-translate-key="gitops.benefits.l1"><strong>Nachvollziehbarkeit:</strong> Jede Änderung ist ein Git Commit (wer, was, wann).</span></li>
+                        <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <span data-translate-key="gitops.benefits.l2"><strong>Konsistenz:</strong> Git definiert den Zustand; Abweichungen werden korrigiert.</span></li>
+                        <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <span data-translate-key="gitops.benefits.l3"><strong>Zuverlässigkeit:</strong> Einfache Rollbacks durch `git revert`.</span></li>
+                        <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <span data-translate-key="gitops.benefits.l4"><strong>Produktivität:</strong> Entwickler nutzen bekannte Git-Workflows.</span></li>
+                         <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <span data-translate-key="gitops.benefits.l5"><strong>Sicherheit:</strong> Änderungen sind auditiert und kontrolliert.</span></li>
                     </ul>
                 </div>
 
                 <div class="md:col-span-2 bg-card-light dark:bg-card-dark p-6 rounded-lg shadow">
-                    <h3 class="text-xl font-semibold mb-4 text-center">Kernprinzipien</h3>
+                    <h3 class="text-xl font-semibold mb-4 text-center" data-translate-key="gitops.principles.title">Kernprinzipien</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
                         <div class="p-4 border border-slate-200 dark:border-slate-700 rounded">
-                            <span class="lucide text-3xl text-primary dark:text-primary-dark mb-2 inline-block">&#xe956;</span> <h4 class="font-semibold">Deklarativ</h4>
-                            <p class="text-sm text-muted-light dark:text-muted-dark">Der gewünschte Zustand wird beschrieben (YAML), nicht die Schritte dorthin.</p>
+                            <span class="lucide text-3xl text-primary dark:text-primary-dark mb-2 inline-block">&#xe956;</span> <h4 class="font-semibold" data-translate-key="gitops.principles.declarative.title">Deklarativ</h4>
+                            <p class="text-sm text-muted-light dark:text-muted-dark" data-translate-key="gitops.principles.declarative.p1">Der gewünschte Zustand wird beschrieben (YAML), nicht die Schritte dorthin.</p>
                         </div>
                          <div class="p-4 border border-slate-200 dark:border-slate-700 rounded">
-                            <span class="lucide text-3xl text-primary dark:text-primary-dark mb-2 inline-block">&#xe961;</span> <h4 class="font-semibold">Versioniert in Git</h4>
-                            <p class="text-sm text-muted-light dark:text-muted-dark">Git ist die einzige Quelle der Wahrheit.</p>
+                            <span class="lucide text-3xl text-primary dark:text-primary-dark mb-2 inline-block">&#xe961;</span> <h4 class="font-semibold" data-translate-key="gitops.principles.versioned.title">Versioniert in Git</h4>
+                            <p class="text-sm text-muted-light dark:text-muted-dark" data-translate-key="gitops.principles.versioned.p1">Git ist die einzige Quelle der Wahrheit.</p>
                         </div>
                          <div class="p-4 border border-slate-200 dark:border-slate-700 rounded">
-                            <span class="lucide text-3xl text-primary dark:text-primary-dark mb-2 inline-block">&#xe906;</span> <h4 class="font-semibold">Automatisch angewendet</h4>
-                            <p class="text-sm text-muted-light dark:text-muted-dark">Änderungen in Git werden automatisch im System umgesetzt.</p>
+                            <span class="lucide text-3xl text-primary dark:text-primary-dark mb-2 inline-block">&#xe906;</span> <h4 class="font-semibold" data-translate-key="gitops.principles.automated.title">Automatisch angewendet</h4>
+                            <p class="text-sm text-muted-light dark:text-muted-dark" data-translate-key="gitops.principles.automated.p1">Änderungen in Git werden automatisch im System umgesetzt.</p>
                         </div>
                          <div class="p-4 border border-slate-200 dark:border-slate-700 rounded">
-                            <span class="lucide text-3xl text-primary dark:text-primary-dark mb-2 inline-block">&#xea6b;</span> <h4 class="font-semibold">Kontinuierlicher Abgleich</h4>
-                            <p class="text-sm text-muted-light dark:text-muted-dark">Agenten stellen sicher, dass der Live-Zustand dem Git-Zustand entspricht.</p>
+                            <span class="lucide text-3xl text-primary dark:text-primary-dark mb-2 inline-block">&#xea6b;</span> <h4 class="font-semibold" data-translate-key="gitops.principles.reconciled.title">Kontinuierlicher Abgleich</h4>
+                            <p class="text-sm text-muted-light dark:text-muted-dark" data-translate-key="gitops.principles.reconciled.p1">Agenten stellen sicher, dass der Live-Zustand dem Git-Zustand entspricht.</p>
                         </div>
                     </div>
                 </div>
                  <div class="md:col-span-2 text-center p-6 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                    <span class="lucide text-4xl text-muted-light dark:text-muted-dark mb-2 inline-block">&#xe9ff;</span> <p class="text-muted-light dark:text-muted-dark">(Hier könnte eine Visualisierung des GitOps-Kreislaufs stehen)</p>
+                    <span class="lucide text-4xl text-muted-light dark:text-muted-dark mb-2 inline-block">&#xe9ff;</span> <p class="text-muted-light dark:text-muted-dark" data-translate-key="gitops.visualization.placeholder">(Hier könnte eine Visualisierung des GitOps-Kreislaufs stehen)</p>
                 </div>
             </div>
         </section>
 
         <section id="flux" class="py-12 md:py-16 bg-card-light dark:bg-card-dark rounded-lg shadow-lg scroll-mt-20">
              <div class="max-w-4xl mx-auto px-6 lg:px-8">
-                <h2 class="text-3xl font-bold mb-8 text-center">Was ist Flux?</h2>
+                <h2 class="text-3xl font-bold mb-8 text-center" data-translate-key="flux.title">Was ist Flux?</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
                     <div class="space-y-4">
-                        <h3 class="text-xl font-semibold">Ein Werkzeug für GitOps</h3>
-                        <p class="text-muted-light dark:text-muted-dark">
+                        <h3 class="text-xl font-semibold" data-translate-key="flux.tool.title">Ein Werkzeug für GitOps</h3>
+                        <p class="text-muted-light dark:text-muted-dark" data-translate-key="flux.tool.p1">
                             Flux ist ein Set von Continuous Delivery Lösungen für Kubernetes, das offen entwickelt wird und den GitOps-Ansatz implementiert. Es überwacht Git Repositories (oder andere Quellen) und synchronisiert den deklarierten Zustand automatisch mit dem Cluster.
                         </p>
-                        <p class="text-muted-light dark:text-muted-dark">
+                        <p class="text-muted-light dark:text-muted-dark" data-translate-key="flux.tool.p2">
                             Flux ist ein <strong class="text-text-light dark:text-text-dark">CNCF Graduated Project</strong>, was seine Reife und breite Akzeptanz unterstreicht.
                         </p>
                          <div class="pt-4">
-                            <h4 class="font-medium mb-2">Alternative: Argo CD</h4>
-                            <p class="text-sm text-muted-light dark:text-muted-dark">Argo CD ist ein weiteres sehr beliebtes CNCF GitOps-Werkzeug mit ähnlichen Zielen, aber einer anderen Architektur (eher Pull-basiert mit zentraler UI).</p>
+                            <h4 class="font-medium mb-2" data-translate-key="flux.alternative.title">Alternative: Argo CD</h4>
+                            <p class="text-sm text-muted-light dark:text-muted-dark" data-translate-key="flux.alternative.p1">Argo CD ist ein weiteres sehr beliebtes CNCF GitOps-Werkzeug mit ähnlichen Zielen, aber einer anderen Architektur (eher Pull-basiert mit zentraler UI).</p>
                         </div>
                     </div>
                     <div class="space-y-4">
-                        <h3 class="text-xl font-semibold">Architektur: Die Controller</h3>
-                        <p class="text-muted-light dark:text-muted-dark">Flux besteht aus spezialisierten Controllern (Kubernetes Operatoren), die zusammenarbeiten:</p>
+                        <h3 class="text-xl font-semibold" data-translate-key="flux.architecture.title">Architektur: Die Controller</h3>
+                        <p class="text-muted-light dark:text-muted-dark" data-translate-key="flux.architecture.p1">Flux besteht aus spezialisierten Controllern (Kubernetes Operatoren), die zusammenarbeiten:</p>
                         <ul class="list-none space-y-2 text-sm text-muted-light dark:text-muted-dark">
-                           <li class="flex items-start"><span class="lucide text-sky-500 dark:text-sky-400 mr-2 mt-1 text-base">&#xe962;</span> <strong>Source Controller:</strong> Holt Manifeste aus Git, Helm Repos, Buckets etc.</li>
-                           <li class="flex items-start"><span class="lucide text-sky-500 dark:text-sky-400 mr-2 mt-1 text-base">&#xea4c;</span> <strong>Kustomize Controller:</strong> Wendet Kustomizations an.</li>
-                           <li class="flex items-start"><span class="lucide text-sky-500 dark:text-sky-400 mr-2 mt-1 text-base">&#xe97b;</span> <strong>Helm Controller:</strong> Verwaltet Helm Releases.</li>
-                           <li class="flex items-start"><span class="lucide text-sky-500 dark:text-sky-400 mr-2 mt-1 text-base">&#xe9dc;</span> <strong>Notification Controller:</strong> Sendet Benachrichtigungen (Slack, Teams etc.).</li>
-                           <li class="flex items-start"><span class="lucide text-sky-500 dark:text-sky-400 mr-2 mt-1 text-base">&#xe9fe;</span> <strong>Image Reflector & Automation Controller:</strong> Überwachen auf neue Container-Images und aktualisieren Git.</li>
+                           <li class="flex items-start"><span class="lucide text-sky-500 dark:text-sky-400 mr-2 mt-1 text-base">&#xe962;</span> <span data-translate-key="flux.architecture.source"><strong>Source Controller:</strong> Holt Manifeste aus Git, Helm Repos, Buckets etc.</span></li>
+                           <li class="flex items-start"><span class="lucide text-sky-500 dark:text-sky-400 mr-2 mt-1 text-base">&#xea4c;</span> <span data-translate-key="flux.architecture.kustomize"><strong>Kustomize Controller:</strong> Wendet Kustomizations an.</span></li>
+                           <li class="flex items-start"><span class="lucide text-sky-500 dark:text-sky-400 mr-2 mt-1 text-base">&#xe97b;</span> <span data-translate-key="flux.architecture.helm"><strong>Helm Controller:</strong> Verwaltet Helm Releases.</span></li>
+                           <li class="flex items-start"><span class="lucide text-sky-500 dark:text-sky-400 mr-2 mt-1 text-base">&#xe9dc;</span> <span data-translate-key="flux.architecture.notification"><strong>Notification Controller:</strong> Sendet Benachrichtigungen (Slack, Teams etc.).</span></li>
+                           <li class="flex items-start"><span class="lucide text-sky-500 dark:text-sky-400 mr-2 mt-1 text-base">&#xe9fe;</span> <span data-translate-key="flux.architecture.image"><strong>Image Reflector & Automation Controller:</strong> Überwachen auf neue Container-Images und aktualisieren Git.</span></li>
                         </ul>
                          <div class="text-center p-4 mt-4 bg-slate-100 dark:bg-slate-900 rounded-lg">
                              <span class="lucide text-3xl text-muted-light dark:text-muted-dark mb-1 inline-block">&#xe9ff;</span>
-                            <p class="text-sm text-muted-light dark:text-muted-dark">(Hier könnte ein Architektur-Diagramm stehen)</p>
+                            <p class="text-sm text-muted-light dark:text-muted-dark" data-translate-key="flux.architecture.placeholder">(Hier könnte ein Architektur-Diagramm stehen)</p>
                         </div>
                     </div>
                 </div>
@@ -324,55 +327,56 @@ spec:
         </section>
 
         <section id="workflow" class="py-12 md:py-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold mb-8 text-center">Der GitOps Workflow mit Flux</h2>
+            <h2 class="text-3xl font-bold mb-8 text-center" data-translate-key="workflow.title">Der GitOps Workflow mit Flux</h2>
             <div class="max-w-3xl mx-auto space-y-6">
                  <div class="p-6 bg-card-light dark:bg-card-dark rounded-lg shadow flex items-start space-x-4">
                      <div class="flex-shrink-0 w-10 h-10 bg-primary dark:bg-primary-dark text-white rounded-full flex items-center justify-center font-bold text-lg">1</div>
                      <div>
-                         <h3 class="font-semibold mb-1">Änderung in Git</h3>
-                         <p class="text-sm text-muted-light dark:text-muted-dark">Ein Entwickler oder ein Automatisierungsprozess ändert die deklarative Konfiguration (z.B. Kubernetes YAML, Kustomization, Helm Release) und pusht den Commit nach Git.</p>
+                         <h3 class="font-semibold mb-1" data-translate-key="workflow.step1.title">Änderung in Git</h3>
+                         <p class="text-sm text-muted-light dark:text-muted-dark" data-translate-key="workflow.step1.p1">Ein Entwickler oder ein Automatisierungsprozess ändert die deklarative Konfiguration (z.B. Kubernetes YAML, Kustomization, Helm Release) und pusht den Commit nach Git.</p>
                      </div>
                  </div>
                  <div class="p-6 bg-card-light dark:bg-card-dark rounded-lg shadow flex items-start space-x-4">
                      <div class="flex-shrink-0 w-10 h-10 bg-primary dark:bg-primary-dark text-white rounded-full flex items-center justify-center font-bold text-lg">2</div>
                      <div>
-                         <h3 class="font-semibold mb-1">Flux erkennt Änderung</h3>
-                         <p class="text-sm text-muted-light dark:text-muted-dark">Der Flux Source Controller erkennt den neuen Commit im überwachten Git Repository (oder einer anderen Quelle).</p>
+                         <h3 class="font-semibold mb-1" data-translate-key="workflow.step2.title">Flux erkennt Änderung</h3>
+                         <p class="text-sm text-muted-light dark:text-muted-dark" data-translate-key="workflow.step2.p1">Der Flux Source Controller erkennt den neuen Commit im überwachten Git Repository (oder einer anderen Quelle).</p>
                      </div>
                  </div>
                   <div class="p-6 bg-card-light dark:bg-card-dark rounded-lg shadow flex items-start space-x-4">
                      <div class="flex-shrink-0 w-10 h-10 bg-primary dark:bg-primary-dark text-white rounded-full flex items-center justify-center font-bold text-lg">3</div>
                      <div>
-                         <h3 class="font-semibold mb-1">Flux wendet Änderung an</h3>
-                         <p class="text-sm text-muted-light dark:text-muted-dark">Abhängig von der Konfiguration rendert der Kustomize Controller oder der Helm Controller die Manifeste und wendet sie auf den Kubernetes Cluster an.</p>
+                         <h3 class="font-semibold mb-1" data-translate-key="workflow.step3.title">Flux wendet Änderung an</h3>
+                         <p class="text-sm text-muted-light dark:text-muted-dark" data-translate-key="workflow.step3.p1">Abhängig von der Konfiguration rendert der Kustomize Controller oder der Helm Controller die Manifeste und wendet sie auf den Kubernetes Cluster an.</p>
                      </div>
                  </div>
                  <div class="p-6 bg-card-light dark:bg-card-dark rounded-lg shadow flex items-start space-x-4">
                      <div class="flex-shrink-0 w-10 h-10 bg-primary dark:bg-primary-dark text-white rounded-full flex items-center justify-center font-bold text-lg">4</div>
                      <div>
-                         <h3 class="font-semibold mb-1">Kontinuierlicher Abgleich</h3>
-                         <p class="text-sm text-muted-light dark:text-muted-dark">Flux überwacht den Cluster weiterhin. Werden manuelle Änderungen vorgenommen (Drift), setzt Flux den Zustand automatisch auf den in Git definierten Stand zurück.</p>
+                         <h3 class="font-semibold mb-1" data-translate-key="workflow.step4.title">Kontinuierlicher Abgleich</h3>
+                         <p class="text-sm text-muted-light dark:text-muted-dark" data-translate-key="workflow.step4.p1">Flux überwacht den Cluster weiterhin. Werden manuelle Änderungen vorgenommen (Drift), setzt Flux den Zustand automatisch auf den in Git definierten Stand zurück.</p>
                      </div>
                  </div>
                  <div class="p-6 bg-slate-100 dark:bg-slate-800 rounded-lg shadow flex items-start space-x-4">
                      <span class="lucide text-2xl text-muted-light dark:text-muted-dark mt-1">&#xe9fe;</span> <div>
-                         <h3 class="font-semibold mb-1">(Optional) Image Automation</h3>
-                         <p class="text-sm text-muted-light dark:text-muted-dark">Wenn konfiguriert, können die Flux Image Controller neue Container-Images in einer Registry erkennen, die Image-Tags in den Git-Manifesten aktualisieren (via Commit) und somit den Workflow automatisch für Image-Updates auslösen.</p>
+                         <h3 class="font-semibold mb-1" data-translate-key="workflow.optional.title">(Optional) Image Automation</h3>
+                         <p class="text-sm text-muted-light dark:text-muted-dark" data-translate-key="workflow.optional.p1">Wenn konfiguriert, können die Flux Image Controller neue Container-Images in einer Registry erkennen, die Image-Tags in den Git-Manifesten aktualisieren (via Commit) und somit den Workflow automatisch für Image-Updates auslösen.</p>
                      </div>
                  </div>
                  <div class="text-center p-6 mt-6 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                    <span class="lucide text-4xl text-muted-light dark:text-muted-dark mb-2 inline-block">&#xe9ff;</span> <p class="text-muted-light dark:text-muted-dark">(Hier könnte eine Visualisierung des Workflows stehen)</p>
+                    <span class="lucide text-4xl text-muted-light dark:text-muted-dark mb-2 inline-block">&#xe9ff;</span> <p class="text-muted-light dark:text-muted-dark" data-translate-key="workflow.placeholder">(Hier könnte eine Visualisierung des Workflows stehen)</p>
                 </div>
             </div>
         </section>
 
         <section id="quiz" class="py-12 md:py-16 bg-card-light dark:bg-card-dark rounded-lg shadow-lg scroll-mt-20">
             <div class="max-w-3xl mx-auto px-6 lg:px-8">
-                <h2 class="text-3xl font-bold mb-8 text-center">Teste dein Wissen!</h2>
+                <h2 class="text-3xl font-bold mb-8 text-center" data-translate-key="quiz.title">Teste dein Wissen!</h2>
                 <form id="quiz-form" class="space-y-8">
-                    </form>
+                    {/* Quiz questions will be populated by JS */}
+                </form>
                 <div class="text-center mt-8">
-                    <button type="button" id="submit-quiz" class="bg-primary hover:bg-sky-600 dark:bg-primary-dark dark:hover:bg-sky-500 text-white font-semibold py-2 px-6 rounded-lg shadow transition-all duration-300">
+                    <button type="button" id="submit-quiz" class="bg-primary hover:bg-sky-600 dark:bg-primary-dark dark:hover:bg-sky-500 text-white font-semibold py-2 px-6 rounded-lg shadow transition-all duration-300" data-translate-key="quiz.submit">
                         Quiz auswerten
                     </button>
                 </div>
@@ -381,23 +385,23 @@ spec:
         </section>
 
         <section id="fazit" class="py-12 md:py-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold mb-8 text-center">Fazit: GitOps mit Flux als Erfolgsfaktor</h2>
+            <h2 class="text-3xl font-bold mb-8 text-center" data-translate-key="conclusion.title">Fazit: GitOps mit Flux als Erfolgsfaktor</h2>
             <div class="max-w-3xl mx-auto space-y-6">
-                <p class="text-lg text-muted-light dark:text-muted-dark">
+                <p class="text-lg text-muted-light dark:text-muted-dark" data-translate-key="conclusion.p1">
                     GitOps, implementiert mit Werkzeugen wie Flux, bietet einen robusten, transparenten und automatisierten Weg, um Kubernetes-Cluster und Anwendungen zu verwalten.
                 </p>
                 <ul class="list-none space-y-3 text-muted-light dark:text-muted-dark">
-                    <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> Es etabliert Git als verlässliche Quelle der Wahrheit.</li>
-                    <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> Es fördert Konsistenz und Wiederholbarkeit über Umgebungen hinweg.</li>
-                    <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> Es vereinfacht Rollbacks und Audits erheblich.</li>
-                    <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> Es verbessert die Zusammenarbeit zwischen Entwicklungs- und Betriebsteams.</li>
-                    <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> Es erhöht die Sicherheit durch kontrollierte, automatisierte Änderungen.</li>
+                    <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <span data-translate-key="conclusion.l1">Es etabliert Git als verlässliche Quelle der Wahrheit.</span></li>
+                    <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <span data-translate-key="conclusion.l2">Es fördert Konsistenz und Wiederholbarkeit über Umgebungen hinweg.</span></li>
+                    <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <span data-translate-key="conclusion.l3">Es vereinfacht Rollbacks und Audits erheblich.</span></li>
+                    <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <span data-translate-key="conclusion.l4">Es verbessert die Zusammenarbeit zwischen Entwicklungs- und Betriebsteams.</span></li>
+                    <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <span data-translate-key="conclusion.l5">Es erhöht die Sicherheit durch kontrollierte, automatisierte Änderungen.</span></li>
                 </ul>
-                 <p class="text-lg text-muted-light dark:text-muted-dark">
+                 <p class="text-lg text-muted-light dark:text-muted-dark" data-translate-key="conclusion.p2">
                     Durch die Automatisierung des Abgleichs zwischen dem gewünschten Zustand (Git) und dem tatsächlichen Zustand (Cluster) ermöglicht Flux eine zuverlässigere und effizientere Continuous Delivery Pipeline für Cloud-Native-Umgebungen.
                 </p>
                 <div class="text-center pt-6">
-                     <a href="https://fluxcd.io/docs/" target="_blank" rel="noopener noreferrer" class="inline-block bg-secondary hover:bg-slate-600 dark:bg-secondary-dark dark:hover:bg-slate-500 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-all duration-300">
+                     <a href="https://fluxcd.io/docs/" target="_blank" rel="noopener noreferrer" class="inline-block bg-secondary hover:bg-slate-600 dark:bg-secondary-dark dark:hover:bg-slate-500 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-all duration-300" data-translate-key="conclusion.button">
                         Zur Flux Dokumentation <span class="lucide align-middle ml-1">&#xe94f;</span> </a>
                 </div>
             </div>
@@ -407,9 +411,9 @@ spec:
 
     <footer class="bg-card-light dark:bg-card-dark border-t border-slate-200 dark:border-slate-700 mt-16 transition-colors duration-300">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-muted-light dark:text-muted-dark">
-            <p>Visualisierung erstellt zur Erklärung von GitOps und Flux.</p>
-            <p>Stand: April 2025. Basierend auf dem Dokument "GitOps & Flux Visualisiert - Eine Einführung".</p>
-             <p class="mt-2">&copy; 2025 - Generiert von Gemini.</p>
+            <p data-translate-key="footer.p1">Visualisierung erstellt zur Erklärung von GitOps und Flux.</p>
+            <p data-translate-key="footer.p2">Stand: April 2025. Basierend auf dem Dokument "GitOps & Flux Visualisiert - Eine Einführung".</p>
+             <p class="mt-2" data-translate-key="footer.p3">&copy; 2025 - Generiert von Gemini.</p>
         </div>
     </footer>
 
@@ -426,6 +430,7 @@ spec:
 
             // Function to apply theme
             const applyTheme = (isDark) => {
+                const currentLang = htmlElement.getAttribute('lang') || 'de';
                 if (isDark) {
                     document.documentElement.classList.add('dark');
                     darkModeToggle.innerHTML = `<span class="lucide text-xl">${sunIcon}</span>`;
@@ -437,6 +442,10 @@ spec:
                      darkModeToggleMobile.innerHTML = `<span class="lucide text-xl">${moonIcon}</span>`;
                     localStorage.setItem('theme', 'light');
                 }
+                // Update aria-label for dark mode toggles based on language
+                const toggleLangLabel = lang === 'de' ? 'Switch to English' : 'Zu Deutsch wechseln';
+                 if(darkModeToggle) darkModeToggle.setAttribute('aria-label', toggleLangLabel);
+                 if(darkModeToggleMobile) darkModeToggleMobile.setAttribute('aria-label', toggleLangLabel);
             };
 
             // Set initial theme
@@ -451,6 +460,83 @@ spec:
                     });
                 }
             });
+
+            // --- Language Toggle & Translation Logic ---
+            const languageToggle = document.getElementById('language-toggle');
+            const languageToggleMobile = document.getElementById('language-toggle-mobile');
+            const htmlElement = document.documentElement;
+
+            const translatePage = (lang) => {
+                document.querySelectorAll('[data-translate-key]').forEach(el => {
+                    const key = el.getAttribute('data-translate-key');
+                    const translation = translations[lang]?.[key];
+                    if (translation !== undefined) { // Check for undefined to handle potentially empty strings
+                        // Use innerHTML to allow for simple HTML tags like <strong>
+                        el.innerHTML = translation;
+                    } else {
+                        console.warn(`Translation key not found for language '${lang}': ${key}`);
+                    }
+                });
+                 // Translate aria-labels
+                document.querySelectorAll('[data-translate-aria-label]').forEach(el => {
+                    const key = el.getAttribute('data-translate-aria-label');
+                    const translation = translations[lang]?.[key];
+                     if (translation !== undefined) {
+                        el.setAttribute('aria-label', translation);
+                    } else {
+                         console.warn(`Translation key not found for aria-label language '${lang}': ${key}`);
+                    }
+                });
+                 // Translate copy buttons (simple case, only text)
+                document.querySelectorAll('.copy-button').forEach(btn => {
+                    // Check if the button text is not 'Copied!' or 'Error'
+                    const copiedText = translations[lang]?.['common.copied'] || 'Copied!';
+                    const errorText = translations[lang]?.['common.copyError'] || 'Error';
+                    if (btn.textContent !== copiedText && btn.textContent !== errorText) {
+                         btn.textContent = translations[lang]?.['common.copy'] || 'Copy';
+                    }
+                });
+
+                // Update quiz questions (needs specific handling as they are dynamically generated)
+                populateQuiz(lang);
+
+                 // Re-apply theme to update dark mode toggle aria-label
+                applyTheme(document.documentElement.classList.contains('dark'));
+            };
+
+            const updateLanguageButton = (button, lang) => {
+                if (button) {
+                    button.textContent = lang === 'de' ? 'EN' : 'DE';
+                    // Update aria-label too
+                    const toggleLangLabel = lang === 'de' ? 'Switch to English' : 'Zu Deutsch wechseln';
+                    button.setAttribute('aria-label', toggleLangLabel);
+                }
+            };
+
+            const toggleLanguage = () => {
+                const currentLang = htmlElement.getAttribute('lang') || 'de';
+                const newLang = currentLang === 'de' ? 'en' : 'de';
+                htmlElement.setAttribute('lang', newLang);
+                updateLanguageButton(languageToggle, newLang);
+                updateLanguageButton(languageToggleMobile, newLang);
+                translatePage(newLang);
+                // Store preference
+                 localStorage.setItem('language', newLang);
+            };
+
+             // Determine initial language (e.g., from localStorage or browser settings, fallback to 'de')
+            let initialLang = localStorage.getItem('language') || htmlElement.getAttribute('lang') || 'de';
+             // Ensure initialLang is either 'de' or 'en'
+            if (initialLang !== 'de' && initialLang !== 'en') {
+                initialLang = 'de';
+            }
+            htmlElement.setAttribute('lang', initialLang); // Ensure HTML lang is set correctly
+            updateLanguageButton(languageToggle, initialLang);
+            updateLanguageButton(languageToggleMobile, initialLang);
+
+            // Add event listeners to language toggles
+            if (languageToggle) languageToggle.addEventListener('click', toggleLanguage);
+            if (languageToggleMobile) languageToggleMobile.addEventListener('click', toggleLanguage);
 
 
             // --- Mobile Menu Toggle ---
@@ -490,218 +576,161 @@ spec:
             // Already handled by Tailwind's `scroll-smooth` class on <html> and standard anchor links.
 
             // --- Copy Button for Code Blocks ---
-            const codeBlocks = document.querySelectorAll('pre[class*="language-"]');
+             const codeBlocks = document.querySelectorAll('pre[class*="language-"]');
             codeBlocks.forEach(block => {
                 const copyButton = block.querySelector('.copy-button');
                 const codeElement = block.querySelector('code');
                 if (copyButton && codeElement) {
+                    // Initial text is set during translatePage
                     copyButton.addEventListener('click', () => {
+                        const lang = htmlElement.getAttribute('lang') || 'de'; // Get current lang at click time
                         const codeToCopy = codeElement.innerText;
                         navigator.clipboard.writeText(codeToCopy).then(() => {
-                            copyButton.textContent = 'Copied!';
+                            copyButton.textContent = translations[lang]?.['common.copied'] || 'Copied!';
                             setTimeout(() => {
-                                copyButton.textContent = 'Copy';
-                            }, 2000); // Reset button text after 2 seconds
+                                copyButton.textContent = translations[lang]?.['common.copy'] || 'Copy';
+                            }, 2000);
                         }).catch(err => {
                             console.error('Failed to copy code: ', err);
-                            copyButton.textContent = 'Error';
+                            copyButton.textContent = translations[lang]?.['common.copyError'] || 'Error';
                              setTimeout(() => {
-                                copyButton.textContent = 'Copy';
+                                copyButton.textContent = translations[lang]?.['common.copy'] || 'Copy';
                             }, 2000);
                         });
                     });
                 }
             });
 
+
             // --- Quiz Logic ---
             const quizForm = document.getElementById('quiz-form');
             const submitButton = document.getElementById('submit-quiz');
             const resultsContainer = document.getElementById('quiz-results');
 
-            const questions = [
-                {
-                    question: "1. Was ist die zentrale \"Quelle der Wahrheit\" (Single Source of Truth) im GitOps-Modell?",
-                    options: [
-                        "A) Der Kubernetes Cluster",
-                        "B) Eine CI/CD-Pipeline-Konfiguration",
-                        "C) Ein Git-Repository",
-                        "D) Die Flux-Operatoren"
-                    ],
-                    correctAnswer: "C) Ein Git-Repository"
-                },
-                {
-                    question: "2. Welches Kernprinzip von GitOps beschreibt, dass der *gewünschte* Systemzustand definiert wird, nicht die Schritte dorthin?",
-                    options: [
-                        "A) Versioniert in Git",
-                        "B) Deklarativ",
-                        "C) Automatisch angewendet",
-                        "D) Kontinuierlicher Abgleich"
-                    ],
-                    correctAnswer: "B) Deklarativ"
-                },
-                 {
-                    question: "3. Was ist Flux im Kontext von GitOps?",
-                    options: [
-                        "A) Ein Cloud-Provider-Service",
-                        "B) Eine Programmiersprache für Kubernetes",
-                        "C) Ein Set von Kubernetes-Operatoren, das GitOps implementiert",
-                        "D) Ein alternatives Versionskontrollsystem zu Git"
-                    ],
-                    correctAnswer: "C) Ein Set von Kubernetes-Operatoren, das GitOps implementiert"
-                },
-                 {
-                    question: "4. Welcher Flux Controller ist primär dafür zuständig, konfigurierte Quellen wie Git-Repositories auf Änderungen zu überwachen?",
-                    options: [
-                        "A) Helm Controller",
-                        "B) Kustomize Controller",
-                        "C) Notification Controller",
-                        "D) Source Controller"
-                    ],
-                    correctAnswer: "D) Source Controller"
-                },
-                 {
-                    question: "5. Was bedeutet der Begriff \"Reconciliation\" (Abgleich) im Zusammenhang mit Flux?",
-                    options: [
-                        "A) Das initiale Installieren von Flux im Cluster.",
-                        "B) Das Senden von Benachrichtigungen bei Fehlern.",
-                        "C) Der kontinuierliche Prozess, sicherzustellen, dass der Live-Zustand des Clusters dem in Git deklarierten Zustand entspricht und Abweichungen korrigiert werden.",
-                        "D) Das manuelle Anwenden von Konfigurationen durch einen Entwickler."
-                    ],
-                    correctAnswer: "C) Der kontinuierliche Prozess, sicherzustellen, dass der Live-Zustand des Clusters dem in Git deklarierten Zustand entspricht und Abweichungen korrigiert werden."
-                },
-                // Add more questions here if needed following the same structure
-                 {
-                    question: "6. Was löst typischerweise eine Aktualisierung im Kubernetes-Cluster aus, wenn man einen GitOps-Workflow mit Flux verwendet?",
-                    options: [
-                        "A) Ein manueller `kubectl apply`-Befehl eines Administrators.",
-                        "B) Ein neuer Commit oder Merge in das überwachte Git-Repository.",
-                        "C) Ein Neustart des Kubernetes Clusters.",
-                        "D) Eine Benachrichtigung vom Notification Controller."
-                    ],
-                    correctAnswer: "B) Ein neuer Commit oder Merge in das überwachte Git-Repository."
-                },
-                 {
-                    question: "7. Welcher Vorteil von GitOps wird durch die Git-Historie besonders unterstützt?",
-                    options: [
-                        "A) Gesteigerte Produktivität",
-                        "B) Verbesserte Sicherheit",
-                        "C) Höhere Zuverlässigkeit durch einfache Rollbacks",
-                        "D) Nachvollziehbarkeit und Audits (wer hat was wann geändert)"
-                    ],
-                    correctAnswer: "D) Nachvollziehbarkeit und Audits (wer hat was wann geändert)"
-                },
-                 {
-                    question: "8. Welcher Flux Controller ist dafür verantwortlich, Kubernetes-Manifeste (z.B. aus Kustomizations oder Helm Charts) tatsächlich im Cluster anzuwenden?",
-                     options: [
-                        "A) Source Controller und Image Controller",
-                        "B) Kustomize Controller und Helm Controller",
-                        "C) Notification Controller und Source Controller",
-                        "D) Nur der Kustomize Controller"
-                    ],
-                    correctAnswer: "B) Kustomize Controller und Helm Controller"
-                },
-                 {
-                    question: "9. Welche Organisation steht hinter Flux und hat es als \"Graduated Project\" eingestuft?",
-                    options: [
-                        "A) Apache Software Foundation",
-                        "B) Linux Foundation",
-                        "C) Cloud Native Computing Foundation (CNCF)",
-                        "D) Kubernetes Steering Committee"
-                    ],
-                    correctAnswer: "C) Cloud Native Computing Foundation (CNCF)"
-                },
-                 {
-                    question: "10. Welches andere GitOps-Werkzeug wird im Dokument als beliebte Alternative zu Flux erwähnt?",
-                    options: [
-                        "A) Jenkins X",
-                        "B) Tekton",
-                        "C) Argo CD",
-                        "D) Spinnaker"
-                    ],
-                    correctAnswer: "C) Argo CD"
-                }
-            ];
+            const populateQuiz = (lang) => {
+                if (!quizForm) return;
+                quizForm.innerHTML = ''; // Clear existing questions
 
-            // Populate quiz form
-            if (quizForm) {
-                questions.forEach((q, index) => {
+                 for (let i = 1; i <= 10; i++) { // Assuming 10 questions
+                    const qKeyBase = `quiz.q${i}`;
+                    const questionTextKey = `${qKeyBase}.question`;
+                    const answerKey = `${qKeyBase}.answer`;
+
+                    const questionText = translations[lang]?.[questionTextKey];
+                    const correctAnswerValue = translations['de']?.[answerKey]; // Correct answer stored under 'de' key for consistency
+                    const correctAnswerText = translations[lang]?.[answerKey]; // Display text for correct answer in current lang
+
+                    if (!questionText || !correctAnswerValue) {
+                         console.warn(`Missing translation for quiz question ${i} in language ${lang}`);
+                         continue; // Skip this question if data is missing
+                    }
+
                     const questionDiv = document.createElement('div');
                     questionDiv.classList.add('quiz-question', 'p-4', 'border', 'border-slate-200', 'dark:border-slate-700', 'rounded-lg');
-                    questionDiv.setAttribute('data-question-index', index);
+                    questionDiv.setAttribute('data-question-index', i - 1); // 0-based index
+                    questionDiv.setAttribute('data-correct-answer', correctAnswerValue); // Store the 'de' version for checking
+                    questionDiv.setAttribute('data-correct-answer-display', correctAnswerText); // Store the display version for feedback
 
-                    const questionText = document.createElement('p');
-                    questionText.classList.add('font-semibold', 'mb-4');
-                    questionText.textContent = q.question;
-                    questionDiv.appendChild(questionText);
+                    const questionP = document.createElement('p');
+                    questionP.classList.add('font-semibold', 'mb-4');
+                    questionP.innerHTML = questionText; // Use innerHTML for potential <em> tags etc.
+                    questionDiv.appendChild(questionP);
 
                     const optionsDiv = document.createElement('div');
                     optionsDiv.classList.add('space-y-2');
 
-                    q.options.forEach((option, optionIndex) => {
+                     for (let j = 1; j <= 4; j++) { // Assuming 4 options
+                        const optionKey = `${qKeyBase}.option${j}`;
+                        const optionText = translations[lang]?.[optionKey];
+                        const optionValue = translations['de']?.[optionKey]; // Use 'de' value for comparison consistency
+
+                         if (!optionText || !optionValue) {
+                             console.warn(`Missing translation for quiz question ${i} option ${j} in language ${lang}`);
+                             continue;
+                         }
+
                         const label = document.createElement('label');
                         label.classList.add('flex', 'items-center', 'p-2', 'rounded', 'hover:bg-slate-100', 'dark:hover:bg-slate-700', 'cursor-pointer');
 
                         const input = document.createElement('input');
                         input.type = 'radio';
-                        input.name = `question-${index}`;
-                        input.value = option;
+                        input.name = `question-${i - 1}`;
+                        input.value = optionValue; // Value is the 'de' version
                         input.classList.add('mr-3', 'form-radio', 'h-4', 'w-4', 'text-primary', 'dark:text-primary-dark', 'focus:ring-primary', 'dark:focus:ring-primary-dark', 'dark:bg-slate-600', 'dark:border-slate-500');
 
                         label.appendChild(input);
-                        label.appendChild(document.createTextNode(option));
+                        const textNode = document.createElement('span'); // Use span for innerHTML
+                        textNode.innerHTML = optionText; // Display text is translated, allow HTML
+                        label.appendChild(textNode);
                         optionsDiv.appendChild(label);
-                    });
+                     }
 
                     questionDiv.appendChild(optionsDiv);
-                    const feedbackP = document.createElement('p'); // Placeholder for feedback
+                    const feedbackP = document.createElement('p');
                     feedbackP.classList.add('quiz-feedback', 'text-sm');
                     questionDiv.appendChild(feedbackP);
 
                     quizForm.appendChild(questionDiv);
-                });
+                }
             }
 
             // Handle quiz submission
-            if (submitButton && resultsContainer) {
+            if (submitButton && resultsContainer && quizForm) {
                 submitButton.addEventListener('click', () => {
+                    const lang = htmlElement.getAttribute('lang') || 'de';
                     let score = 0;
-                    const totalQuestions = questions.length;
-                    resultsContainer.innerHTML = ''; // Clear previous results
+                    const totalQuestions = quizForm.querySelectorAll('.quiz-question').length;
+                    resultsContainer.innerHTML = '';
 
-                    questions.forEach((q, index) => {
-                        const questionDiv = quizForm.querySelector(`.quiz-question[data-question-index="${index}"]`);
+                    quizForm.querySelectorAll('.quiz-question').forEach((questionDiv, index) => {
                         const feedbackP = questionDiv.querySelector('.quiz-feedback');
-                        feedbackP.textContent = ''; // Clear previous feedback
-                         feedbackP.className = 'quiz-feedback text-sm'; // Reset classes
+                        feedbackP.textContent = '';
+                        feedbackP.className = 'quiz-feedback text-sm'; // Reset classes
 
-                        const selectedOption = quizForm.querySelector(`input[name="question-${index}"]:checked`);
+                        const selectedOption = questionDiv.querySelector(`input[name="question-${index}"]:checked`);
+                        const correctAnswerValue = questionDiv.getAttribute('data-correct-answer');
+                        const correctAnswerDisplay = questionDiv.getAttribute('data-correct-answer-display'); // Translated display value
 
                         if (selectedOption) {
-                            if (selectedOption.value === q.correctAnswer) {
+                            if (selectedOption.value === correctAnswerValue) { // Compare against the consistent 'de' value
                                 score++;
-                                feedbackP.textContent = 'Richtig!';
+                                feedbackP.textContent = translations[lang]?.['quiz.feedback.correct'] || 'Correct!';
                                 feedbackP.classList.add('quiz-correct');
                             } else {
-                                feedbackP.textContent = `Falsch. Richtige Antwort: ${q.correctAnswer.substring(0, q.correctAnswer.indexOf(')'))})`; // Show only "C)" part
+                                const incorrectMsg = translations[lang]?.['quiz.feedback.incorrect'] || 'Incorrect. Correct answer: ';
+                                // Extract only the prefix like 'C)' from the potentially HTML-containing answer display
+                                const answerPrefixMatch = correctAnswerDisplay?.match(/^\s*[A-Z]\)/i);
+                                const answerPrefix = answerPrefixMatch ? answerPrefixMatch[0] : '';
+                                feedbackP.textContent = `${incorrectMsg}${answerPrefix}`;
                                 feedbackP.classList.add('quiz-incorrect');
                             }
                         } else {
-                            feedbackP.textContent = 'Keine Antwort ausgewählt.';
-                             feedbackP.classList.add('text-muted-light', 'dark:text-muted-dark');
+                            feedbackP.textContent = translations[lang]?.['quiz.feedback.noanswer'] || 'No answer selected.';
+                            feedbackP.classList.add('text-muted-light', 'dark:text-muted-dark');
                         }
                     });
 
                     // Display final score
-                    const scorePercentage = Math.round((score / totalQuestions) * 100);
+                    const scorePercentage = Math.round(totalQuestions > 0 ? (score / totalQuestions) * 100 : 0);
+                    const scoreTemplate = translations[lang]?.['quiz.results.score'] || 'Your score: {score} out of {total} ({percentage}%)';
+                    const scoreText = scoreTemplate
+                        .replace('{score}', score)
+                        .replace('{total}', totalQuestions)
+                        .replace('{percentage}', scorePercentage);
+
                     const resultMessage = document.createElement('p');
                     resultMessage.classList.add('text-lg', 'font-bold', 'mt-4');
-                    resultMessage.textContent = `Dein Ergebnis: ${score} von ${totalQuestions} (${scorePercentage}%)`;
+                    resultMessage.textContent = scoreText;
                     resultsContainer.appendChild(resultMessage);
 
                     // Scroll to results
                     resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 });
             }
+
+            // Initial Page Load Translation & Theme Application
+            translatePage(initialLang);
+            // applyTheme(userPrefersDark); // Apply theme after initial translation to ensure aria-labels are correct
 
         }); // End DOMContentLoaded
     </script>
