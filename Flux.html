@@ -1,512 +1,710 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitOps & Flux Visualisiert - Eine Einführung</title>
-    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom styles can be added here if needed */
-        body {
-            background-color: #f8fafc; /* Lighter gray background */
-        }
-        h1, h2, h3 {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
-        h1 {
-             background: linear-gradient(120deg, #1e3a8a, #3b82f6); /* Darker blue gradient */
-             -webkit-background-clip: text;
-             background-clip: text;
-             -webkit-text-fill-color: transparent;
-             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        .section-card {
-            background: white;
-            border-radius: 1rem; /* More rounded */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Softer shadow */
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            overflow: hidden; /* Ensure content respects border radius */
-        }
-        .section-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Larger shadow on hover */
-        }
-        .diagram-placeholder {
-             background-color: #e5e7eb; /* Gray-200 */
-             border: 2px dashed #9ca3af; /* Gray-400 */
-             display: flex;
-             align-items: center;
-             justify-content: center;
-             min-height: 200px; /* Ensure space for diagram */
-             text-align: center;
-             padding: 1rem;
-             border-radius: 0.5rem;
-             color: #4b5563; /* Gray-600 */
-             font-style: italic;
-        }
-        .lucide {
-             display: inline-block; /* Better alignment */
-             font-family: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif; /* Fallback font for icons */
-             vertical-align: middle;
-             margin-right: 0.3em; /* Space after icon */
-             line-height: 1;
-        }
-         .lucide-lg { font-size: 1.5em; }
-         .lucide-xl { font-size: 2.5em; }
-         .lucide-xxl { font-size: 4em; }
+      @font-face {
+        font-family: 'LucideIcons';
+        src: url(https://cdn.jsdelivr.net/npm/lucide-static@latest/font/Lucide.ttf) format('truetype');
+      }
+      .lucide {
+        font-family: 'LucideIcons';
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-rendering: auto;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      /* Basic styles for code blocks */
+      pre[class*="language-"] {
+        padding: 1em;
+        margin: .5em 0;
+        overflow: auto;
+        border-radius: 0.375rem; /* rounded-md */
+      }
+      /* Style for copy button */
+      .copy-button {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s ease-in-out;
+      }
+      pre:hover .copy-button {
+        opacity: 1;
+      }
+      /* Simple quiz result styling */
+      .quiz-correct { color: #10B981; } /* emerald-500 */
+      .quiz-incorrect { color: #EF4444; } /* red-500 */
+      .quiz-feedback { margin-top: 0.5rem; font-weight: bold; }
 
-        /* Enhanced list styling */
-        .styled-list li {
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            transition: background-color 0.2s ease;
-            display: flex;
-            align-items: flex-start; /* Align icon top */
-        }
-        .styled-list li:hover {
-            background-color: rgba(59, 130, 246, 0.05); /* Lighter blue hover */
-        }
-        .styled-list .lucide {
-            margin-top: 0.15em; /* Adjust icon vertical alignment */
-            color: #3b82f6; /* Blue-500 */
-        }
-        .styled-list strong {
-            color: #1e3a8a; /* Darker blue for emphasis */
-        }
-
-        /* Workflow Step Styling */
-        .workflow-step {
-            background-color: white;
-            border: 1px solid #e5e7eb; /* Gray-200 */
-            border-radius: 0.75rem;
-            padding: 1rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-            display: flex;
-            flex-direction: column;
-            flex-direction: row;
-            align-items: center;
-            transition: border-color 0.3s ease;
-        }
-         .workflow-step:hover {
-             border-color: #93c5fd; /* Blue-300 */
-         }
-        .workflow-step .step-number {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #3b82f6; /* Blue-500 */
-            margin-bottom: 0.5rem;
-            margin-right: 1rem;
-            min-width: 2rem; /* Ensure number alignment */
-            text-align: center;
-        }
-        .workflow-step .step-content {
-            text-align: center;
-            flex-grow: 1;
-        }
-        .workflow-step .lucide {
-             color: #6b7280; /* Gray-500 */
-        }
-
-        /* Arrow styling */
-         .arrow-connector {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem 0;
-         }
-         .arrow-connector .lucide {
-             color: #9ca3af; /* Gray-400 */
-             font-size: 2rem;
-         }
-         /* Rotate arrow on smaller screens */
-         @media (max-width: 767px) {
-            .arrow-connector .lucide {
-                 transform: rotate(90deg);
-             }
-         }
-
+      /* Mobile Nav Styling */
+      #mobile-menu {
+        transition: transform 0.3s ease-in-out;
+      }
+      #mobile-menu.hidden {
+        transform: translateX(-100%);
+      }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
-      // Simple script to replace placeholders with basic text-based Lucide icons
-      document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('[data-lucide]').forEach(el => {
-          const iconName = el.getAttribute('data-lucide');
-          // Basic mapping - Extend as needed or use a proper icon library
-          const iconMap = {
-            'git-branch': '⎇', 'git-pull-request': '⇄', 'database': '💾',
-            'server': '🖥️', 'cloud': '☁️', 'arrow-right': '→', 'arrow-left': '←',
-            'arrow-down': '↓', 'refresh-cw': '🔄', 'check-circle': '✅', 'alert-triangle': '⚠️',
-            'box': '📦', 'layers': '📚', 'github': '🐙', 'package': '📦',
-            'eye': '👀', 'send': '➡️', 'bell': '🔔', 'image': '🖼️',
-            'settings-2': '⚙️', 'user': '🧑‍💻', 'rocket': '🚀', 'shield-check': '🛡️',
-            'book-open': '📖', 'zap': '⚡', 'thumbs-up': '👍', 'code': '</>',
-            'clock': '⏱️', 'lock': '🔒'
-            // Add more mappings here
-          };
-          el.classList.add('lucide');
-          el.textContent = iconMap[iconName] || '?'; // Use '?' for unknown icons
-        });
-      });
+      tailwind.config = {
+        darkMode: 'selector', // Enable dark mode using class="dark" on <html>
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              // Define custom colors if needed
+              primary: {
+                DEFAULT: '#0ea5e9', // sky-500
+                dark: '#38bdf8' // sky-400
+              },
+              secondary: {
+                DEFAULT: '#64748b', // slate-500
+                dark: '#94a3b8' // slate-400
+              },
+              background: {
+                light: '#f8fafc', // slate-50
+                dark: '#0f172a' // slate-900
+              },
+              card: {
+                light: '#ffffff',
+                dark: '#1e293b' // slate-800
+              },
+              text: {
+                light: '#0f172a', // slate-900
+                dark: '#e2e8f0' // slate-200
+              },
+              muted: {
+                light: '#64748b', // slate-500
+                dark: '#94a3b8' // slate-400
+              }
+            }
+          }
+        }
+      }
     </script>
 </head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal text-gray-800">
+<body class="font-sans bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark transition-colors duration-300">
 
-    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+    <header class="sticky top-0 z-50 bg-card-light dark:bg-card-dark shadow-md transition-colors duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <div class="text-xl font-bold text-primary dark:text-primary-dark">
+                GitOps & Flux
+            </div>
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="#einfuehrung" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">Einführung</a>
+                <a href="#quickstart" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">Quick Start</a>
+                <a href="#gitops" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">Was ist GitOps?</a>
+                <a href="#flux" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">Was ist Flux?</a>
+                <a href="#workflow" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">Workflow</a>
+                <a href="#quiz" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">Quiz</a>
+                <a href="#fazit" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">Fazit</a>
+                <button id="dark-mode-toggle" aria-label="Toggle Dark Mode" class="ml-4 text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">
+                    <span class="lucide text-xl"></span> </button>
+            </div>
+            <div class="md:hidden flex items-center">
+                 <button id="dark-mode-toggle-mobile" aria-label="Toggle Dark Mode" class="mr-4 text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark transition-colors">
+                    <span class="lucide text-xl"></span> </button>
+                <button id="mobile-menu-button" aria-label="Open Menu" class="text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark focus:outline-none">
+                    <span class="lucide text-2xl">&#xe9b2;</span> </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="fixed inset-y-0 left-0 w-64 bg-card-light dark:bg-card-dark shadow-lg p-4 transform -translate-x-full md:hidden transition-transform duration-300 ease-in-out z-40">
+             <button id="mobile-close-button" aria-label="Close Menu" class="absolute top-4 right-4 text-secondary hover:text-primary dark:text-secondary-dark dark:hover:text-primary-dark">
+                 <span class="lucide text-2xl">&#xea11;</span> </button>
+            <nav class="mt-10 flex flex-col space-y-4">
+                <a href="#einfuehrung" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link">Einführung</a>
+                <a href="#quickstart" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link">Quick Start</a>
+                <a href="#gitops" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link">Was ist GitOps?</a>
+                <a href="#flux" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link">Was ist Flux?</a>
+                <a href="#workflow" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link">Workflow</a>
+                <a href="#quiz" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link">Quiz</a>
+                <a href="#fazit" class="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-gray-100 dark:text-secondary-dark dark:hover:text-primary-dark dark:hover:bg-slate-700 mobile-nav-link">Fazit</a>
+            </nav>
+        </div>
+    </header>
 
-        <header class="text-center mb-16">
-            <h1 class="text-5xl md:text-6xl font-extrabold mb-4">GitOps & Flux Visualisiert</h1>
-            <p class="text-xl text-gray-600">Ein moderner Ansatz für Continuous Delivery auf Kubernetes</p>
-        </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
 
-        <section class="mb-16 section-card p-8">
-             <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-3 flex items-center"><i data-lucide="book-open" class="lucide lucide-lg text-blue-600"></i>Einführung: Die Herausforderung moderner Deployments</h2>
-             <p class="mb-4 text-gray-700">Moderne Anwendungen, insbesondere auf Plattformen wie Kubernetes, bestehen oft aus vielen Komponenten und Konfigurationen. Das Management von Updates, Konsistenz über Umgebungen hinweg und die Nachvollziehbarkeit von Änderungen wird schnell komplex.</p>
-             <p class="text-gray-700">Traditionelle CI/CD-Pipelines stoßen hier an Grenzen. Wie können wir sicherstellen, dass der *tatsächliche* Zustand unserer Infrastruktur und Anwendungen *immer* dem gewünschten Zustand entspricht, der sicher und nachvollziehbar verwaltet wird?</p>
-             <p class="mt-4 font-semibold text-blue-700">Hier kommen GitOps und Werkzeuge wie Flux ins Spiel.</p>
+        <section id="hero" class="text-center py-16 md:py-24">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-text-light dark:text-text-dark">
+                GitOps & Flux <span class="text-primary dark:text-primary-dark">Visualisiert</span>
+            </h1>
+            <p class="text-lg md:text-xl text-muted-light dark:text-muted-dark mb-8 max-w-3xl mx-auto">
+                Ein moderner Ansatz für Continuous Delivery auf Kubernetes. Verstehen Sie die Prinzipien und Werkzeuge, die Ihre Deployments revolutionieren können.
+            </p>
+            <a href="#quickstart" class="inline-block bg-primary hover:bg-sky-600 dark:bg-primary-dark dark:hover:bg-sky-500 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-all duration-300">
+                Loslegen: Quick Start
+            </a>
         </section>
 
-        <!-- Quick Start Guide Section -->
-        <section class="mb-16 section-card p-8 bg-gradient-to-r from-blue-50 to-green-50">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-3 flex items-center">
-                <i data-lucide="zap" class="lucide lucide-lg text-yellow-500"></i>
-                Quick Start Guide: In 5 Minuten mit GitOps starten
-            </h2>
-            
-            <div class="space-y-6">
-                <!-- Prerequisites -->
-                <div class="bg-white p-4 rounded-lg shadow-sm">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3 flex items-center">
-                        <i data-lucide="check-circle" class="lucide text-green-500 mr-2"></i>
-                        Voraussetzungen
-                    </h3>
-                    <ul class="list-inside space-y-2 text-gray-700">
-                        <li class="flex items-start">
-                            <i data-lucide="check" class="lucide text-green-500 mr-2 mt-1"></i>
-                            <span>Ein laufender Kubernetes Cluster (z.B. minikube, kind, oder ein Cloud-Cluster)</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i data-lucide="check" class="lucide text-green-500 mr-2 mt-1"></i>
-                            <span>kubectl CLI Tool installiert und konfiguriert</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i data-lucide="check" class="lucide text-green-500 mr-2 mt-1"></i>
-                            <span>Ein Git Repository (z.B. auf GitHub)</span>
-                        </li>
-                    </ul>
-                </div>
+        <section id="einfuehrung" class="py-12 md:py-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold mb-6 text-center">Einführung: Die Herausforderung moderner Deployments</h2>
+            <div class="max-w-3xl mx-auto text-lg text-muted-light dark:text-muted-dark space-y-4">
+                <p>
+                    Moderne Anwendungen, insbesondere auf Plattformen wie Kubernetes, bestehen oft aus vielen Komponenten und Konfigurationen. Das Management von Updates, Konsistenz über Umgebungen hinweg und die Nachvollziehbarkeit von Änderungen wird schnell komplex.
+                </p>
+                <p>
+                    Traditionelle CI/CD-Pipelines stoßen hier an Grenzen. Wie können wir sicherstellen, dass der <em>tatsächliche</em> Zustand unserer Infrastruktur und Anwendungen <em>immer</em> dem gewünschten Zustand entspricht, der sicher und nachvollziehbar verwaltet wird?
+                </p>
+                <p class="font-semibold text-text-light dark:text-text-dark">
+                    Hier kommen GitOps und Werkzeuge wie Flux ins Spiel.
+                </p>
+            </div>
+        </section>
 
-                <!-- Installation Steps -->
-                <div class="bg-white p-4 rounded-lg shadow-sm">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3 flex items-center">
-                        <i data-lucide="terminal" class="lucide text-purple-500 mr-2"></i>
-                        Installation
-                    </h3>
-                    <div class="space-y-4">
-                        <div class="bg-gray-800 text-white p-4 rounded font-mono text-sm overflow-x-auto">
-                            <p class="text-gray-400 mb-2"># 1. Flux CLI installieren</p>
-                            <code>curl -s https://fluxcd.io/install.sh | sudo bash</code>
-                            
-                            <p class="text-gray-400 mt-4 mb-2"># 2. Cluster überprüfen</p>
-                            <code>flux check --pre</code>
-                            
-                            <p class="text-gray-400 mt-4 mb-2"># 3. Flux im Cluster installieren</p>
-                            <code>flux bootstrap github \<br>--owner=$GITHUB_USER \<br>--repository=fleet-infra \<br>--branch=main \<br>--path=clusters/my-cluster \<br>--personal</code>
+        <section id="quickstart" class="py-12 md:py-16 bg-card-light dark:bg-card-dark rounded-lg shadow-lg scroll-mt-20">
+            <div class="max-w-4xl mx-auto px-6 lg:px-8">
+                <h2 class="text-3xl font-bold mb-8 text-center">Quick Start Guide: In 5 Minuten mit GitOps starten</h2>
+
+                <h3 class="text-xl font-semibold mb-4">Voraussetzungen</h3>
+                <ul class="list-none space-y-2 mb-8 text-muted-light dark:text-muted-dark">
+                    <li class="flex items-center"><span class="lucide text-primary dark:text-primary-dark mr-3">&#xea14;</span> Ein laufender Kubernetes Cluster (z.B. minikube, kind, Cloud-Cluster)</li>
+                    <li class="flex items-center"><span class="lucide text-primary dark:text-primary-dark mr-3">&#xea14;</span> `kubectl` CLI Tool installiert und konfiguriert</li>
+                    <li class="flex items-center"><span class="lucide text-primary dark:text-primary-dark mr-3">&#xea14;</span> Ein Git Repository (z.B. auf GitHub, GitLab)</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-4">Installation & Bootstrap</h3>
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="font-medium mb-1">1. Flux CLI installieren</h4>
+                        <div class="relative">
+                            <pre class="language-bash bg-slate-100 dark:bg-slate-900 text-sm"><code class="language-bash">curl -s https://fluxcd.io/install.sh | sudo bash</code><button class="copy-button bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600">Copy</button></pre>
                         </div>
                     </div>
-                </div>
-
-                <!-- First Application -->
-                <div class="bg-white p-4 rounded-lg shadow-sm">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3 flex items-center">
-                        <i data-lucide="rocket" class="lucide text-blue-500 mr-2"></i>
-                        Erste Anwendung deployen
-                    </h3>
-                    <div class="space-y-4">
-                        <div class="bg-gray-800 text-white p-4 rounded font-mono text-sm overflow-x-auto">
-                            <p class="text-gray-400 mb-2"># Demo-App Source erstellen</p>
-                            <code>flux create source git podinfo \<br>--url=https://github.com/stefanprodan/podinfo \<br>--branch=master \<br>--interval=30s</code>
-                            
-                            <p class="text-gray-400 mt-4 mb-2"># Kustomization erstellen</p>
-                            <code>flux create kustomization podinfo \<br>--source=podinfo \<br>--path="./kustomize" \<br>--prune=true \<br>--interval=5m</code>
-                        </div>
+                    <div>
+                        <h4 class="font-medium mb-1">2. Cluster überprüfen</h4>
+                         <div class="relative">
+                            <pre class="language-bash bg-slate-100 dark:bg-slate-900 text-sm"><code class="language-bash">flux check --pre</code><button class="copy-button bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600">Copy</button></pre>
+                         </div>
                     </div>
-                </div>
-
-                <!-- Verification -->
-                <div class="bg-white p-4 rounded-lg shadow-sm">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3 flex items-center">
-                        <i data-lucide="check-square" class="lucide text-green-500 mr-2"></i>
-                        Überprüfung
-                    </h3>
-                    <div class="space-y-4">
-                        <div class="bg-gray-800 text-white p-4 rounded font-mono text-sm overflow-x-auto">
-                            <p class="text-gray-400 mb-2"># Deployment Status prüfen</p>
-                            <code>flux get kustomizations --watch</code>
-                            
-                            <p class="text-gray-400 mt-4 mb-2"># Pods anzeigen</p>
-                            <code>kubectl get pods -n default</code>
-                        </div>
+                    <div>
+                        <h4 class="font-medium mb-1">3. Flux im Cluster installieren (Bootstrap)</h4>
+                        <p class="text-sm text-muted-light dark:text-muted-dark mb-2">Passt die Werte für `--owner`, `--repository` etc. an eure Umgebung an.</p>
+                         <div class="relative">
+                            <pre class="language-bash bg-slate-100 dark:bg-slate-900 text-sm"><code class="language-bash"># Beispiel für GitHub
+flux bootstrap github \\
+  --owner=$GITHUB_USER \\
+  --repository=mein-cluster-repo \\
+  --branch=main \\
+  --path=./clusters/mein-cluster \\
+  --personal</code><button class="copy-button bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600">Copy</button></pre>
+                         </div>
+                         <p class="text-sm text-muted-light dark:text-muted-dark mt-2">Dieser Befehl installiert Flux, erstellt Deploy Keys und committet die Flux-Konfiguration in dein Repository.</p>
                     </div>
-                </div>
-
-                <!-- Next Steps Box -->
-                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                    <h3 class="text-xl font-semibold text-blue-800 mb-3 flex items-center">
-                        <i data-lucide="arrow-right" class="lucide text-blue-500 mr-2"></i>
-                        Nächste Schritte
-                    </h3>
-                    <ul class="list-inside space-y-2 text-gray-700">
-                        <li class="flex items-start">
-                            <i data-lucide="book" class="lucide text-blue-500 mr-2 mt-1"></i>
-                            <a href="https://fluxcd.io/docs/" target="_blank" class="text-blue-600 hover:underline">Flux Dokumentation</a>
-                            erkunden
-                        </li>
-                        <li class="flex items-start">
-                            <i data-lucide="git-branch" class="lucide text-blue-500 mr-2 mt-1"></i>
-                            Eigene Anwendungen und Manifeste hinzufügen
-                        </li>
-                        <li class="flex items-start">
-                            <i data-lucide="bell" class="lucide text-blue-500 mr-2 mt-1"></i>
-                            Notifications für Slack/Discord einrichten
-                        </li>
-                    </ul>
+                     <div>
+                        <h4 class="font-medium mb-1">4. Beispielanwendung deployen</h4>
+                        <p class="text-sm text-muted-light dark:text-muted-dark mb-2">Füge eine Kubernetes Manifest-Datei (z.B. `nginx-deployment.yaml`) in deinem Git Repository unter dem Pfad hinzu, den du bei `--path` angegeben hast (`./clusters/mein-cluster`). Flux wird diese Änderung erkennen und anwenden.</p>
+                         <div class="relative">
+                            <pre class="language-yaml bg-slate-100 dark:bg-slate-900 text-sm"><code class="language-yaml"># Beispiel: ./clusters/mein-cluster/nginx-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.25 # Flux kann auch Image-Updates automatisieren!
+        ports:
+        - containerPort: 80</code><button class="copy-button bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600">Copy</button></pre>
+                         </div>
+                         <p class="text-sm text-muted-light dark:text-muted-dark mt-2">Committe und pushe diese Datei. Flux wird sie nach kurzer Zeit im Cluster deployen!</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="mb-16 section-card p-8">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-3 flex items-center"><i data-lucide="github" class="lucide lucide-lg text-blue-600"></i>1. Was ist GitOps?</h2>
-            <p class="mb-6 text-lg text-gray-700">GitOps ist ein Betriebsmodell für Cloud-Native-Anwendungen (insbesondere auf Kubernetes), das <strong class="text-blue-800">Git als zentrale Quelle der Wahrheit (Single Source of Truth)</strong> für die deklarative Beschreibung von Infrastruktur und Anwendungen nutzt.</p>
+        <section id="gitops" class="py-12 md:py-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold mb-8 text-center">Was ist GitOps?</h2>
+            <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+                <div class="bg-card-light dark:bg-card-dark p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold mb-3">Definition</h3>
+                    <p class="text-muted-light dark:text-muted-dark">
+                        GitOps ist ein Betriebsmodell für Cloud-Native-Anwendungen (insbesondere Kubernetes), das Git als **Single Source of Truth** (einzige Quelle der Wahrheit) für die deklarative Infrastruktur und Anwendungsdefinitionen nutzt. Änderungen am System werden über Git Commits gesteuert und automatisch angewendet.
+                    </p>
+                </div>
 
-             <h3 class="text-2xl font-semibold mb-4 text-gray-700">Warum GitOps?</h3>
-            <ul class="list-disc list-inside text-gray-700 space-y-2 mb-8 pl-4">
-                 <li><strong class="font-medium">Komplexitätsreduktion:</strong> Vereinheitlicht das Management von Infrastruktur und Anwendungs-Deployments.</li>
-                 <li><strong class="font-medium">Konsistenz & Standardisierung:</strong> Stellt sicher, dass alle Umgebungen auf dem gleichen, in Git definierten Stand sind.</li>
-                 <li><strong class="font-medium">Nachvollziehbarkeit & Audits:</strong> Jede Änderung am System ist ein Git-Commit (wer, was, wann).</li>
-                 <li><strong class="font-medium">Zuverlässigkeit & Stabilität:</strong> Einfache Rollbacks durch `git revert`. Automatische Korrektur von Abweichungen.</li>
-                 <li><strong class="font-medium">Entwicklerzentriertheit:</strong> Entwickler nutzen bekannte Git-Workflows, um Änderungen auszurollen.</li>
-                  <li><strong class="font-medium">Sicherheit:</strong> Direkte Cluster-Zugriffe können reduziert werden; Änderungen erfolgen kontrolliert über Git.</li>
-            </ul>
+                <div class="bg-card-light dark:bg-card-dark p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold mb-3">Warum GitOps? (Vorteile)</h3>
+                    <ul class="list-none space-y-2 text-muted-light dark:text-muted-dark">
+                        <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <strong>Nachvollziehbarkeit:</strong> Jede Änderung ist ein Git Commit (wer, was, wann).</li>
+                        <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <strong>Konsistenz:</strong> Git definiert den Zustand; Abweichungen werden korrigiert.</li>
+                        <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <strong>Zuverlässigkeit:</strong> Einfache Rollbacks durch `git revert`.</li>
+                        <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <strong>Produktivität:</strong> Entwickler nutzen bekannte Git-Workflows.</li>
+                         <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> <strong>Sicherheit:</strong> Änderungen sind auditiert und kontrolliert.</li>
+                    </ul>
+                </div>
 
-            <div class="mb-8 p-6 border border-gray-200 rounded-lg bg-gray-50">
-                <h3 class="text-2xl font-semibold mb-6 text-center text-gray-700">Der GitOps-Kreislauf</h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                    <div class="flex flex-col items-center p-4 border rounded-lg bg-white shadow-sm">
-                        <i data-lucide="github" class="lucide lucide-xxl text-blue-600 mb-3"></i>
-                        <span class="font-semibold text-lg">1. Git Repository</span>
-                        <span class="text-sm text-gray-500">(Source of Truth)</span>
-                        <p class="text-xs mt-2">Enthält deklarative Konfiguration (YAML, Helm, Kustomize).</p>
-                    </div>
-                    <div class="flex flex-col items-center p-4 border rounded-lg bg-white shadow-sm">
-                         <img src="https://www.vectorlogo.zone/logos/fluxcdio/fluxcdio-icon.svg" alt="Flux Logo" class="w-16 h-16 mb-3">
-                        <span class="font-semibold text-lg">2. Automatisierter Agent</span>
-                        <span class="text-sm text-gray-500">(z.B. Flux, Argo CD)</span>
-                        <p class="text-xs mt-2">Läuft im Cluster, überwacht Git und wendet Änderungen an.</p>
-                    </div>
-                    <div class="flex flex-col items-center p-4 border rounded-lg bg-white shadow-sm">
-                         <i data-lucide="cloud" class="lucide lucide-xxl text-green-600 mb-3"></i>
-                        <span class="font-semibold text-lg">3. Zielumgebung</span>
-                        <span class="text-sm text-gray-500">(Kubernetes Cluster)</span>
-                         <p class="text-xs mt-2">Der Live-Zustand wird kontinuierlich mit Git synchronisiert.</p>
+                <div class="md:col-span-2 bg-card-light dark:bg-card-dark p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Kernprinzipien</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
+                        <div class="p-4 border border-slate-200 dark:border-slate-700 rounded">
+                            <span class="lucide text-3xl text-primary dark:text-primary-dark mb-2 inline-block">&#xe956;</span> <h4 class="font-semibold">Deklarativ</h4>
+                            <p class="text-sm text-muted-light dark:text-muted-dark">Der gewünschte Zustand wird beschrieben (YAML), nicht die Schritte dorthin.</p>
+                        </div>
+                         <div class="p-4 border border-slate-200 dark:border-slate-700 rounded">
+                            <span class="lucide text-3xl text-primary dark:text-primary-dark mb-2 inline-block">&#xe961;</span> <h4 class="font-semibold">Versioniert in Git</h4>
+                            <p class="text-sm text-muted-light dark:text-muted-dark">Git ist die einzige Quelle der Wahrheit.</p>
+                        </div>
+                         <div class="p-4 border border-slate-200 dark:border-slate-700 rounded">
+                            <span class="lucide text-3xl text-primary dark:text-primary-dark mb-2 inline-block">&#xe906;</span> <h4 class="font-semibold">Automatisch angewendet</h4>
+                            <p class="text-sm text-muted-light dark:text-muted-dark">Änderungen in Git werden automatisch im System umgesetzt.</p>
+                        </div>
+                         <div class="p-4 border border-slate-200 dark:border-slate-700 rounded">
+                            <span class="lucide text-3xl text-primary dark:text-primary-dark mb-2 inline-block">&#xea6b;</span> <h4 class="font-semibold">Kontinuierlicher Abgleich</h4>
+                            <p class="text-sm text-muted-light dark:text-muted-dark">Agenten stellen sicher, dass der Live-Zustand dem Git-Zustand entspricht.</p>
+                        </div>
                     </div>
                 </div>
-                 <div class="mt-8 text-gray-700 flex items-center justify-center bg-blue-50 p-4 rounded-lg border border-blue-200">
-                     <i data-lucide="refresh-cw" class="lucide lucide-lg text-blue-600 mr-3 animate-spin [animation-duration:3s]"></i>
-                     <span class="font-semibold">Kernidee:</span> Der Agent <strong class="mx-1">zieht</strong> (pull) kontinuierlich den Zustand aus Git und <strong class="ml-1">gleicht</strong> ihn mit dem Cluster ab (Reconciliation).
-                 </div>
+                 <div class="md:col-span-2 text-center p-6 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                    <span class="lucide text-4xl text-muted-light dark:text-muted-dark mb-2 inline-block">&#xe9ff;</span> <p class="text-muted-light dark:text-muted-dark">(Hier könnte eine Visualisierung des GitOps-Kreislaufs stehen)</p>
+                </div>
             </div>
+        </section>
 
-            <h3 class="text-2xl font-semibold mb-4 text-gray-700">Kernprinzipien von GitOps</h3>
-            <ul class="styled-list space-y-3 mb-6">
-                <li><i data-lucide="code"></i><span><strong class="font-semibold">Deklarativ:</strong> Der gewünschte Systemzustand wird deklarativ in Dateien beschrieben (z.B. Kubernetes YAML, Helm Charts, Kustomizations). Nicht "wie", sondern "was".</span></li>
-                <li><i data-lucide="git-branch"></i><span><strong class="font-semibold">Versioniert und unveränderlich in Git:</strong> Git ist die einzige Quelle der Wahrheit. Der gewünschte Zustand ist versioniert, transparent und auditierbar.</span></li>
-                <li><i data-lucide="refresh-cw"></i><span><strong class="font-semibold">Automatisch durch Agenten angewendet:</strong> Software-Agenten (wie Flux) ziehen den deklarierten Zustand aus Git und wenden ihn automatisch auf das System an.</span></li>
-                <li><i data-lucide="shield-check"></i><span><strong class="font-semibold">Kontinuierlicher Abgleich (Reconciliation):</strong> Die Agenten stellen kontinuierlich sicher, dass der Live-Zustand dem in Git deklarierten Zustand entspricht und korrigieren Abweichungen (Drift).</span></li>
-            </ul>
-
-             <h3 class="text-2xl font-semibold mb-4 text-gray-700">Vorteile im Überblick</h3>
-             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
-                 <div class="bg-green-50 p-4 rounded-lg border border-green-200 flex items-start">
-                     <i data-lucide="thumbs-up" class="lucide text-green-600 mt-1 mr-2"></i>
-                     <span><strong class="font-medium text-green-800">Höhere Zuverlässigkeit:</strong> Konsistente Deployments, einfache Rollbacks.</span>
-                 </div>
-                 <div class="bg-green-50 p-4 rounded-lg border border-green-200 flex items-start">
-                    <i data-lucide="book-open" class="lucide text-green-600 mt-1 mr-2"></i>
-                     <span><strong class="font-medium text-green-800">Bessere Nachvollziehbarkeit:</strong> Git-Historie als Audit Trail.</span>
-                 </div>
-                  <div class="bg-green-50 p-4 rounded-lg border border-green-200 flex items-start">
-                    <i data-lucide="zap" class="lucide text-green-600 mt-1 mr-2"></i>
-                    <span><strong class="font-medium text-green-800">Gesteigerte Produktivität:</strong> Schnellere und häufigere Deployments.</span>
-                 </div>
-                 <div class="bg-green-50 p-4 rounded-lg border border-green-200 flex items-start">
-                    <i data-lucide="lock" class="lucide text-green-600 mt-1 mr-2"></i>
-                    <span><strong class="font-medium text-green-800">Verbesserte Sicherheit:</strong> Weniger direkter Cluster-Zugriff nötig.</span>
-                 </div>
+        <section id="flux" class="py-12 md:py-16 bg-card-light dark:bg-card-dark rounded-lg shadow-lg scroll-mt-20">
+             <div class="max-w-4xl mx-auto px-6 lg:px-8">
+                <h2 class="text-3xl font-bold mb-8 text-center">Was ist Flux?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-semibold">Ein Werkzeug für GitOps</h3>
+                        <p class="text-muted-light dark:text-muted-dark">
+                            Flux ist ein Set von Continuous Delivery Lösungen für Kubernetes, das offen entwickelt wird und den GitOps-Ansatz implementiert. Es überwacht Git Repositories (oder andere Quellen) und synchronisiert den deklarierten Zustand automatisch mit dem Cluster.
+                        </p>
+                        <p class="text-muted-light dark:text-muted-dark">
+                            Flux ist ein <strong class="text-text-light dark:text-text-dark">CNCF Graduated Project</strong>, was seine Reife und breite Akzeptanz unterstreicht.
+                        </p>
+                         <div class="pt-4">
+                            <h4 class="font-medium mb-2">Alternative: Argo CD</h4>
+                            <p class="text-sm text-muted-light dark:text-muted-dark">Argo CD ist ein weiteres sehr beliebtes CNCF GitOps-Werkzeug mit ähnlichen Zielen, aber einer anderen Architektur (eher Pull-basiert mit zentraler UI).</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-semibold">Architektur: Die Controller</h3>
+                        <p class="text-muted-light dark:text-muted-dark">Flux besteht aus spezialisierten Controllern (Kubernetes Operatoren), die zusammenarbeiten:</p>
+                        <ul class="list-none space-y-2 text-sm text-muted-light dark:text-muted-dark">
+                           <li class="flex items-start"><span class="lucide text-sky-500 dark:text-sky-400 mr-2 mt-1 text-base">&#xe962;</span> <strong>Source Controller:</strong> Holt Manifeste aus Git, Helm Repos, Buckets etc.</li>
+                           <li class="flex items-start"><span class="lucide text-sky-500 dark:text-sky-400 mr-2 mt-1 text-base">&#xea4c;</span> <strong>Kustomize Controller:</strong> Wendet Kustomizations an.</li>
+                           <li class="flex items-start"><span class="lucide text-sky-500 dark:text-sky-400 mr-2 mt-1 text-base">&#xe97b;</span> <strong>Helm Controller:</strong> Verwaltet Helm Releases.</li>
+                           <li class="flex items-start"><span class="lucide text-sky-500 dark:text-sky-400 mr-2 mt-1 text-base">&#xe9dc;</span> <strong>Notification Controller:</strong> Sendet Benachrichtigungen (Slack, Teams etc.).</li>
+                           <li class="flex items-start"><span class="lucide text-sky-500 dark:text-sky-400 mr-2 mt-1 text-base">&#xe9fe;</span> <strong>Image Reflector & Automation Controller:</strong> Überwachen auf neue Container-Images und aktualisieren Git.</li>
+                        </ul>
+                         <div class="text-center p-4 mt-4 bg-slate-100 dark:bg-slate-900 rounded-lg">
+                             <span class="lucide text-3xl text-muted-light dark:text-muted-dark mb-1 inline-block">&#xe9ff;</span>
+                            <p class="text-sm text-muted-light dark:text-muted-dark">(Hier könnte ein Architektur-Diagramm stehen)</p>
+                        </div>
+                    </div>
+                </div>
              </div>
         </section>
 
-        <section class="mb-16 section-card p-8">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-3 flex items-center"><i data-lucide="box" class="lucide lucide-lg text-purple-600"></i>2. Was ist Flux?</h2>
-            <p class="mb-4 text-lg text-gray-700">Flux ist ein Set von <strong class="text-purple-800">Kubernetes-Operatoren</strong>, das die GitOps-Prinzipien für Cluster-Konfiguration und Anwendungs-Deployments implementiert. Es ist ein Projekt der <strong class="text-purple-800">Cloud Native Computing Foundation (CNCF)</strong> und hat den <strong class="text-purple-800">Graduated</strong>-Status erreicht.</p>
-            <p class="mb-6 text-gray-700">Flux überwacht definierte Quellen (wie Git-Repositories) und synchronisiert den Zustand im Kubernetes-Cluster automatisch mit diesen Quellen.</p>
-
-            <div class="mb-8 p-6 border border-gray-200 rounded-lg bg-gray-50">
-                 <h3 class="text-2xl font-semibold mb-6 text-center text-gray-700">Flux Architektur (Vereinfachte Übersicht)</h3>
-                 <div class="mb-6 flex justify-center">
-                    <img src="ChatGPT Image 8. Apr. 2025, 11_39_16.png" 
-                         alt="Flux Architecture Diagram" 
-                         class="w-full max-w-4xl rounded-lg shadow-lg">
-                 </div>
-
-                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-                     <div class="flex-1 flex flex-col items-center p-4 border rounded-lg bg-white shadow-sm h-full">
-                         <span class="font-semibold mb-3 text-lg border-b pb-1 w-full text-center">Quellen</span>
-                         <div class="space-y-2 text-left w-full text-sm">
-                            <div class="flex items-center"><i data-lucide="github" class="lucide text-gray-600"></i><strong class="mr-1">Git Repo:</strong> Primäre Quelle für Manifeste.</div>
-                            <div class="flex items-center"><i data-lucide="package" class="lucide text-gray-600"></i><strong class="mr-1">Helm Repo:</strong> Für Helm-Charts.</div>
-                            <div class="flex items-center"><i data-lucide="package" class="lucide text-gray-600"></i><strong class="mr-1">OCI Repo:</strong> Für Manifeste/Charts in OCI-Registries.</div>
-                            <div class="flex items-center"><i data-lucide="database" class="lucide text-gray-600"></i><strong class="mr-1">Bucket:</strong> S3-kompatibler Speicher.</div>
-                         </div>
-                         <div class="mt-auto pt-3 text-sm text-purple-700 font-medium border-t w-full text-center">Verwaltet durch: Source Controller</div>
-                     </div>
-
-                     <div class="flex-1 flex flex-col items-center p-4 border rounded-lg bg-purple-50 border-purple-200 shadow-sm h-full">
-                         <span class="font-semibold mb-3 text-lg border-b pb-1 w-full text-center text-purple-800">Flux Controller</span>
-                         <div class="space-y-2 text-left w-full text-sm">
-                            <div class="flex items-center"><i data-lucide="send" class="lucide text-purple-600"></i><strong class="mr-1">Kustomize Controller:</strong> Wendet Kustomizations an.</div>
-                            <div class="flex items-center"><i data-lucide="send" class="lucide text-purple-600"></i><strong class="mr-1">Helm Controller:</strong> Verwaltet Helm Releases.</div>
-                            <div class="flex items-center"><i data-lucide="bell" class="lucide text-purple-600"></i><strong class="mr-1">Notification Controller:</strong> Sendet Benachrichtigungen.</div>
-                            <div class="flex items-center"><i data-lucide="image" class="lucide text-purple-600"></i><strong class="mr-1">Image Reflector & Automation:</strong> Erkennt neue Container-Images und kann Git aktualisieren (optional).</div>
-                         </div>
-                           <div class="mt-auto pt-3 text-sm text-purple-700 font-medium border-t w-full text-center">Laufen als Pods im Cluster</div>
-                     </div>
-
-                      <div class="flex-1 flex flex-col items-center p-4 border rounded-lg bg-white shadow-sm h-full">
-                         <span class="font-semibold mb-3 text-lg border-b pb-1 w-full text-center">Ziel: Kubernetes Cluster</span>
-                         <i data-lucide="cloud" class="lucide lucide-xxl text-green-600 my-4"></i>
-                         <div class="text-sm space-y-2 w-full text-center">
-                             <div class="flex items-center justify-center"><i data-lucide="layers" class="lucide text-green-600"></i> Angewandte Ressourcen (Deployments, Services, etc.)</div>
-                             <div class="flex items-center justify-center mt-2"><i data-lucide="refresh-cw" class="lucide text-green-600"></i> Kontinuierlicher Abgleich (Reconciliation Loop)</div>
-                         </div>
-                     </div>
-                 </div>
-            </div>
-
-            <h3 class="text-2xl font-semibold mb-4 text-gray-700">Hauptaufgaben von Flux</h3>
-            <ul class="styled-list space-y-3">
-                 <li><i data-lucide="eye" class="text-purple-500"></i><span><strong class="font-semibold text-purple-800">Überwachen (Source Controller):</strong> Beobachtet konfigurierte Quellen (Git, Helm Repos, Buckets, OCI) auf Änderungen in definierten Intervallen.</span></li>
-                 <li><i data-lucide="send" class="text-purple-500"></i><span><strong class="font-semibold text-purple-800">Anwenden (Kustomize & Helm Controller):</strong> Holt die Manifeste aus den Quellen und synchronisiert sie mit dem Cluster, indem Kubernetes-Ressourcen erstellt/aktualisiert/gelöscht werden.</span></li>
-                 <li><i data-lucide="refresh-cw" class="text-purple-500"></i><span><strong class="font-semibold text-purple-800">Abgleichen (Alle Controller):</strong> Jeder Controller führt eine Reconciliation-Schleife aus, um sicherzustellen, dass der Live-Zustand dem gewünschten Zustand entspricht und korrigiert automatisch Abweichungen ("Drift").</span></li>
-                 <li><i data-lucide="bell" class="text-purple-500"></i><span><strong class="font-semibold text-purple-800">Benachrichtigen (Notification Controller):</strong> Sendet Status-Updates über den Synchronisationsprozess und Ereignisse an externe Systeme (z.B. Slack, Teams, Webhooks).</span></li>
-                 <li><i data-lucide="settings-2" class="text-purple-500"></i><span><strong class="font-semibold text-purple-800">Automatisieren (Image Controller):</strong> Kann Container-Registries auf neue Image-Tags überwachen und automatisch Commits mit den aktualisierten Image-Versionen in Git erstellen (optional).</span></li>
-            </ul>
-            <p class="mt-6 text-sm text-gray-600 italic">Hinweis: Flux ist nicht das einzige GitOps-Werkzeug. <a href="https://argo-cd.readthedocs.io/" target="_blank" class="text-blue-600 hover:underline">Argo CD</a> ist eine weitere beliebte Alternative mit ähnlichen Zielen, aber unterschiedlicher Architektur und Benutzeroberfläche.</p>
-        </section>
-
-         <section class="mb-16 section-card p-8">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-3 flex items-center"><i data-lucide="rocket" class="lucide lucide-lg text-green-600"></i>3. Der GitOps-Workflow mit Flux</h2>
-            <p class="mb-8 text-lg text-gray-700">So sieht ein typischer Entwicklungs- und Deployment-Zyklus mit GitOps und Flux aus:</p>
-
-            <div class="mb-8 flex justify-center">
-                <img src="https://sdmntpraustraliaeast.oaiusercontent.com/files/00000000-ecf8-51fa-a2aa-20c437946422/raw?se=2025-04-08T10%3A45%3A13Z&sp=r&sv=2024-08-04&sr=b&scid=329a6c75-01ee-54c6-9128-321cca97deb2&skoid=9370dd2b-ca43-4270-bed5-18b1b71f8fa0&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-04-08T05%3A40%3A21Z&ske=2025-04-09T05%3A40%3A21Z&sks=b&skv=2024-08-04&sig=Ml/6uj79j8Xb%2BghSC1Hk5HWbSiqw8d5HSRqHjeMnlNo%3D" 
-                     alt="GitOps Workflow Diagram" 
-                     class="w-full max-w-4xl rounded-lg shadow-lg">
-            </div>
-
-            <div class="space-y-4">
-                <div class="workflow-step border-blue-200">
-                    <div class="step-number text-blue-600">1</div>
-                    <div class="step-content flex flex-col md:flex-row items-center">
-                         <i data-lucide="user" class="lucide lucide-xl text-blue-600 mr-4 mb-2 md:mb-0"></i>
-                         <div>
-                            <span class="font-semibold text-lg">Entwickler macht eine Änderung</span>
-                            <p class="text-sm text-gray-600">Ein Entwickler oder Teammitglied ändert Code oder Konfiguration (z.B. Dockerfile, Kubernetes YAML, Helm Chart Values) und pusht die Änderung <i data-lucide="git-pull-request" class="lucide"></i> in das überwachte Git-Repository (z.B. via Pull Request Merge).</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="arrow-connector"><i data-lucide="arrow-down" class="lucide"></i></div>
-
-                <div class="workflow-step border-purple-200">
-                     <div class="step-number text-purple-600">2</div>
-                     <div class="step-content flex flex-col md:flex-row items-center">
-                         <i data-lucide="eye" class="lucide lucide-xl text-purple-600 mr-4 mb-2 md:mb-0"></i>
-                        <div>
-                            <span class="font-semibold text-lg">Flux Source Controller erkennt die Änderung</span>
-                            <p class="text-sm text-gray-600">Der Source Controller von Flux, der das Git-Repository regelmäßig prüft, entdeckt den neuen Commit.</p>
-                        </div>
-                    </div>
-                </div>
-
-                 <div class="arrow-connector"><i data-lucide="arrow-down" class="lucide"></i></div>
-
-                <div class="workflow-step border-purple-200">
-                    <div class="step-number text-purple-600">3</div>
-                     <div class="step-content flex flex-col md:flex-row items-center">
-                        <i data-lucide="send" class="lucide lucide-xl text-purple-600 mr-4 mb-2 md:mb-0"></i>
-                        <div>
-                            <span class="font-semibold text-lg">Flux Kustomize/Helm Controller wendet Änderung an</span>
-                            <p class="text-sm text-gray-600">Abhängig von der Konfiguration (Kustomization oder HelmRelease) rendert der zuständige Controller die Manifeste und wendet sie auf den Kubernetes Cluster an (<code class="text-xs bg-gray-200 p-1 rounded">kubectl apply</code>-ähnlich).</p>
-                         </div>
-                    </div>
-                </div>
-
-                 <div class="arrow-connector"><i data-lucide="arrow-down" class="lucide"></i></div>
-
-                 <div class="workflow-step border-green-200">
-                    <div class="step-number text-green-600">4</div>
-                    <div class="step-content flex flex-col md:flex-row items-center">
-                        <i data-lucide="check-circle" class="lucide lucide-xl text-green-600 mr-4 mb-2 md:mb-0"></i>
-                        <div>
-                            <span class="font-semibold text-lg">Kubernetes Cluster aktualisiert den Zustand</span>
-                            <p class="text-sm text-gray-600">Kubernetes erstellt/aktualisiert/löscht die entsprechenden Ressourcen (Pods, Services, etc.), um den in Git deklarierten Zustand zu erreichen.</p>
-                         </div>
-                    </div>
-                </div>
-
-                 <div class="mt-8 flex flex-col md:flex-row items-center justify-center text-gray-700 p-4 rounded-lg border-2 border-dashed border-gray-400 bg-gray-100">
-                     <i data-lucide="refresh-cw" class="lucide lucide-lg text-gray-600 mr-3 mb-2 md:mb-0"></i>
+        <section id="workflow" class="py-12 md:py-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold mb-8 text-center">Der GitOps Workflow mit Flux</h2>
+            <div class="max-w-3xl mx-auto space-y-6">
+                 <div class="p-6 bg-card-light dark:bg-card-dark rounded-lg shadow flex items-start space-x-4">
+                     <div class="flex-shrink-0 w-10 h-10 bg-primary dark:bg-primary-dark text-white rounded-full flex items-center justify-center font-bold text-lg">1</div>
                      <div>
-                        <span class="font-semibold text-center md:text-left block">Kontinuierliche Überwachung & Korrektur</span>
-                        <span class="text-sm text-center md:text-left block">Flux überwacht den Cluster weiterhin. Werden manuelle Änderungen vorgenommen (Drift), setzt Flux den Zustand automatisch auf den in Git definierten Stand zurück.</span>
-                    </div>
+                         <h3 class="font-semibold mb-1">Änderung in Git</h3>
+                         <p class="text-sm text-muted-light dark:text-muted-dark">Ein Entwickler oder ein Automatisierungsprozess ändert die deklarative Konfiguration (z.B. Kubernetes YAML, Kustomization, Helm Release) und pusht den Commit nach Git.</p>
+                     </div>
                  </div>
-
-                 <div class="mt-6 flex flex-col md:flex-row items-center justify-center text-gray-700 p-4 rounded-lg border border-dashed border-blue-400 bg-blue-50">
-                     <i data-lucide="image" class="lucide lucide-lg text-blue-600 mr-3 mb-2 md:mb-0"></i>
-                      <div>
-                        <span class="font-semibold text-center md:text-left block">(Optional) Image Automation</span>
-                        <span class="text-sm text-center md:text-left block">Wenn konfiguriert, kann Flux neue Container-Images in einer Registry erkennen <i data-lucide="eye" class="lucide text-xs"></i>, die Image-Tags in den Git-Manifesten aktualisieren (via Commit <i data-lucide="git-pull-request" class="lucide text-xs"></i>) und somit den oben beschriebenen Workflow automatisch für Image-Updates auslösen <i data-lucide="refresh-cw" class="lucide text-xs"></i>.</span>
-                    </div>
+                 <div class="p-6 bg-card-light dark:bg-card-dark rounded-lg shadow flex items-start space-x-4">
+                     <div class="flex-shrink-0 w-10 h-10 bg-primary dark:bg-primary-dark text-white rounded-full flex items-center justify-center font-bold text-lg">2</div>
+                     <div>
+                         <h3 class="font-semibold mb-1">Flux erkennt Änderung</h3>
+                         <p class="text-sm text-muted-light dark:text-muted-dark">Der Flux Source Controller erkennt den neuen Commit im überwachten Git Repository (oder einer anderen Quelle).</p>
+                     </div>
                  </div>
+                  <div class="p-6 bg-card-light dark:bg-card-dark rounded-lg shadow flex items-start space-x-4">
+                     <div class="flex-shrink-0 w-10 h-10 bg-primary dark:bg-primary-dark text-white rounded-full flex items-center justify-center font-bold text-lg">3</div>
+                     <div>
+                         <h3 class="font-semibold mb-1">Flux wendet Änderung an</h3>
+                         <p class="text-sm text-muted-light dark:text-muted-dark">Abhängig von der Konfiguration rendert der Kustomize Controller oder der Helm Controller die Manifeste und wendet sie auf den Kubernetes Cluster an.</p>
+                     </div>
+                 </div>
+                 <div class="p-6 bg-card-light dark:bg-card-dark rounded-lg shadow flex items-start space-x-4">
+                     <div class="flex-shrink-0 w-10 h-10 bg-primary dark:bg-primary-dark text-white rounded-full flex items-center justify-center font-bold text-lg">4</div>
+                     <div>
+                         <h3 class="font-semibold mb-1">Kontinuierlicher Abgleich</h3>
+                         <p class="text-sm text-muted-light dark:text-muted-dark">Flux überwacht den Cluster weiterhin. Werden manuelle Änderungen vorgenommen (Drift), setzt Flux den Zustand automatisch auf den in Git definierten Stand zurück.</p>
+                     </div>
+                 </div>
+                 <div class="p-6 bg-slate-100 dark:bg-slate-800 rounded-lg shadow flex items-start space-x-4">
+                     <span class="lucide text-2xl text-muted-light dark:text-muted-dark mt-1">&#xe9fe;</span> <div>
+                         <h3 class="font-semibold mb-1">(Optional) Image Automation</h3>
+                         <p class="text-sm text-muted-light dark:text-muted-dark">Wenn konfiguriert, können die Flux Image Controller neue Container-Images in einer Registry erkennen, die Image-Tags in den Git-Manifesten aktualisieren (via Commit) und somit den Workflow automatisch für Image-Updates auslösen.</p>
+                     </div>
+                 </div>
+                 <div class="text-center p-6 mt-6 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                    <span class="lucide text-4xl text-muted-light dark:text-muted-dark mb-2 inline-block">&#xe9ff;</span> <p class="text-muted-light dark:text-muted-dark">(Hier könnte eine Visualisierung des Workflows stehen)</p>
+                </div>
             </div>
         </section>
 
-        <section class="mb-16 section-card p-8 bg-gradient-to-r from-blue-50 to-purple-50">
-             <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-3 flex items-center"><i data-lucide="check-circle" class="lucide lucide-lg text-green-600"></i>Fazit: GitOps mit Flux als Erfolgsfaktor</h2>
-             <p class="mb-4 text-gray-700">GitOps, implementiert mit Werkzeugen wie Flux, bietet einen robusten, transparenten und automatisierten Weg, um Kubernetes-Cluster und Anwendungen zu verwalten.</p>
-             <ul class="list-disc list-inside text-gray-700 space-y-2 mb-6 pl-4">
-                 <li>Es etabliert <strong class="font-medium">Git als verlässliche Quelle der Wahrheit</strong>.</li>
-                 <li>Es fördert <strong class="font-medium">Konsistenz und Wiederholbarkeit</strong> über Umgebungen hinweg.</li>
-                 <li>Es <strong class="font-medium">vereinfacht Rollbacks und Audits</strong> erheblich.</li>
-                 <li>Es <strong class="font-medium">verbessert die Zusammenarbeit</strong> zwischen Entwicklungs- und Betriebsteams.</li>
-                 <li>Es <strong class="font-medium">erhöht die Sicherheit</strong> durch kontrollierte, automatisierte Änderungen.</li>
-             </ul>
-             <p class="text-gray-700">Durch die Automatisierung des Abgleichs zwischen dem gewünschten Zustand (Git) und dem tatsächlichen Zustand (Cluster) ermöglicht Flux eine zuverlässigere und effizientere Continuous Delivery Pipeline für Cloud-Native-Umgebungen.</p>
-             <p class="mt-6 text-center">
-                 <a href="https://fluxcd.io/docs/" target="_blank" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out shadow hover:shadow-md">
-                     Erfahren Sie mehr in der Flux Dokumentation <i data-lucide="arrow-right" class="lucide"></i>
-                 </a>
-             </p>
+        <section id="quiz" class="py-12 md:py-16 bg-card-light dark:bg-card-dark rounded-lg shadow-lg scroll-mt-20">
+            <div class="max-w-3xl mx-auto px-6 lg:px-8">
+                <h2 class="text-3xl font-bold mb-8 text-center">Teste dein Wissen!</h2>
+                <form id="quiz-form" class="space-y-8">
+                    </form>
+                <div class="text-center mt-8">
+                    <button type="button" id="submit-quiz" class="bg-primary hover:bg-sky-600 dark:bg-primary-dark dark:hover:bg-sky-500 text-white font-semibold py-2 px-6 rounded-lg shadow transition-all duration-300">
+                        Quiz auswerten
+                    </button>
+                </div>
+                <div id="quiz-results" class="mt-8 text-center"></div>
+            </div>
         </section>
 
-        <footer class="text-center mt-16 py-6 border-t border-gray-300 text-gray-500 text-sm">
-            Visualisierung erstellt zur Erklärung von GitOps und Flux. <br/>
-            Stand: April 2025. Icons vereinfacht dargestellt.
-        </footer>
+        <section id="fazit" class="py-12 md:py-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold mb-8 text-center">Fazit: GitOps mit Flux als Erfolgsfaktor</h2>
+            <div class="max-w-3xl mx-auto space-y-6">
+                <p class="text-lg text-muted-light dark:text-muted-dark">
+                    GitOps, implementiert mit Werkzeugen wie Flux, bietet einen robusten, transparenten und automatisierten Weg, um Kubernetes-Cluster und Anwendungen zu verwalten.
+                </p>
+                <ul class="list-none space-y-3 text-muted-light dark:text-muted-dark">
+                    <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> Es etabliert Git als verlässliche Quelle der Wahrheit.</li>
+                    <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> Es fördert Konsistenz und Wiederholbarkeit über Umgebungen hinweg.</li>
+                    <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> Es vereinfacht Rollbacks und Audits erheblich.</li>
+                    <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> Es verbessert die Zusammenarbeit zwischen Entwicklungs- und Betriebsteams.</li>
+                    <li class="flex items-start"><span class="lucide text-green-500 mr-2 mt-1">&#xea14;</span> Es erhöht die Sicherheit durch kontrollierte, automatisierte Änderungen.</li>
+                </ul>
+                 <p class="text-lg text-muted-light dark:text-muted-dark">
+                    Durch die Automatisierung des Abgleichs zwischen dem gewünschten Zustand (Git) und dem tatsächlichen Zustand (Cluster) ermöglicht Flux eine zuverlässigere und effizientere Continuous Delivery Pipeline für Cloud-Native-Umgebungen.
+                </p>
+                <div class="text-center pt-6">
+                     <a href="https://fluxcd.io/docs/" target="_blank" rel="noopener noreferrer" class="inline-block bg-secondary hover:bg-slate-600 dark:bg-secondary-dark dark:hover:bg-slate-500 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-all duration-300">
+                        Zur Flux Dokumentation <span class="lucide align-middle ml-1">&#xe94f;</span> </a>
+                </div>
+            </div>
+        </section>
 
-    </div>
+    </main>
+
+    <footer class="bg-card-light dark:bg-card-dark border-t border-slate-200 dark:border-slate-700 mt-16 transition-colors duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-muted-light dark:text-muted-dark">
+            <p>Visualisierung erstellt zur Erklärung von GitOps und Flux.</p>
+            <p>Stand: April 2025. Basierend auf dem Dokument "GitOps & Flux Visualisiert - Eine Einführung".</p>
+             <p class="mt-2">&copy; 2025 - Generiert von Gemini.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Dark Mode Toggle ---
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const darkModeToggleMobile = document.getElementById('dark-mode-toggle-mobile');
+            const sunIcon = '&#xe9ce;'; // Sun icon
+            const moonIcon = '&#xe9c4;'; // Moon icon
+            const userPrefersDark = localStorage.getItem('theme') === 'dark' ||
+                                    (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+            // Function to apply theme
+            const applyTheme = (isDark) => {
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                    darkModeToggle.innerHTML = `<span class="lucide text-xl">${sunIcon}</span>`;
+                    darkModeToggleMobile.innerHTML = `<span class="lucide text-xl">${sunIcon}</span>`;
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    darkModeToggle.innerHTML = `<span class="lucide text-xl">${moonIcon}</span>`;
+                     darkModeToggleMobile.innerHTML = `<span class="lucide text-xl">${moonIcon}</span>`;
+                    localStorage.setItem('theme', 'light');
+                }
+            };
+
+            // Set initial theme
+            applyTheme(userPrefersDark);
+
+            // Add event listeners
+             [darkModeToggle, darkModeToggleMobile].forEach(toggle => {
+                if(toggle) {
+                    toggle.addEventListener('click', () => {
+                        const isCurrentlyDark = document.documentElement.classList.contains('dark');
+                        applyTheme(!isCurrentlyDark);
+                    });
+                }
+            });
+
+
+            // --- Mobile Menu Toggle ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileCloseButton = document.getElementById('mobile-close-button');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+            if (mobileMenuButton && mobileMenu && mobileCloseButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.remove('hidden', '-translate-x-full');
+                    mobileMenu.classList.add('translate-x-0');
+                });
+
+                mobileCloseButton.addEventListener('click', () => {
+                    mobileMenu.classList.remove('translate-x-0');
+                    mobileMenu.classList.add('-translate-x-full');
+                    // Add hidden after transition duration (300ms)
+                    setTimeout(() => {
+                       // Re-add hidden if it's still closed, prevents race conditions
+                       if(mobileMenu.classList.contains('-translate-x-full')) {
+                            mobileMenu.classList.add('hidden');
+                       }
+                    }, 300);
+                });
+
+                // Close menu when a link is clicked
+                mobileNavLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileCloseButton.click(); // Simulate click on close button
+                    });
+                });
+            }
+
+
+            // --- Smooth Scrolling ---
+            // Already handled by Tailwind's `scroll-smooth` class on <html> and standard anchor links.
+
+            // --- Copy Button for Code Blocks ---
+            const codeBlocks = document.querySelectorAll('pre[class*="language-"]');
+            codeBlocks.forEach(block => {
+                const copyButton = block.querySelector('.copy-button');
+                const codeElement = block.querySelector('code');
+                if (copyButton && codeElement) {
+                    copyButton.addEventListener('click', () => {
+                        const codeToCopy = codeElement.innerText;
+                        navigator.clipboard.writeText(codeToCopy).then(() => {
+                            copyButton.textContent = 'Copied!';
+                            setTimeout(() => {
+                                copyButton.textContent = 'Copy';
+                            }, 2000); // Reset button text after 2 seconds
+                        }).catch(err => {
+                            console.error('Failed to copy code: ', err);
+                            copyButton.textContent = 'Error';
+                             setTimeout(() => {
+                                copyButton.textContent = 'Copy';
+                            }, 2000);
+                        });
+                    });
+                }
+            });
+
+            // --- Quiz Logic ---
+            const quizForm = document.getElementById('quiz-form');
+            const submitButton = document.getElementById('submit-quiz');
+            const resultsContainer = document.getElementById('quiz-results');
+
+            const questions = [
+                {
+                    question: "1. Was ist die zentrale \"Quelle der Wahrheit\" (Single Source of Truth) im GitOps-Modell?",
+                    options: [
+                        "A) Der Kubernetes Cluster",
+                        "B) Eine CI/CD-Pipeline-Konfiguration",
+                        "C) Ein Git-Repository",
+                        "D) Die Flux-Operatoren"
+                    ],
+                    correctAnswer: "C) Ein Git-Repository"
+                },
+                {
+                    question: "2. Welches Kernprinzip von GitOps beschreibt, dass der *gewünschte* Systemzustand definiert wird, nicht die Schritte dorthin?",
+                    options: [
+                        "A) Versioniert in Git",
+                        "B) Deklarativ",
+                        "C) Automatisch angewendet",
+                        "D) Kontinuierlicher Abgleich"
+                    ],
+                    correctAnswer: "B) Deklarativ"
+                },
+                 {
+                    question: "3. Was ist Flux im Kontext von GitOps?",
+                    options: [
+                        "A) Ein Cloud-Provider-Service",
+                        "B) Eine Programmiersprache für Kubernetes",
+                        "C) Ein Set von Kubernetes-Operatoren, das GitOps implementiert",
+                        "D) Ein alternatives Versionskontrollsystem zu Git"
+                    ],
+                    correctAnswer: "C) Ein Set von Kubernetes-Operatoren, das GitOps implementiert"
+                },
+                 {
+                    question: "4. Welcher Flux Controller ist primär dafür zuständig, konfigurierte Quellen wie Git-Repositories auf Änderungen zu überwachen?",
+                    options: [
+                        "A) Helm Controller",
+                        "B) Kustomize Controller",
+                        "C) Notification Controller",
+                        "D) Source Controller"
+                    ],
+                    correctAnswer: "D) Source Controller"
+                },
+                 {
+                    question: "5. Was bedeutet der Begriff \"Reconciliation\" (Abgleich) im Zusammenhang mit Flux?",
+                    options: [
+                        "A) Das initiale Installieren von Flux im Cluster.",
+                        "B) Das Senden von Benachrichtigungen bei Fehlern.",
+                        "C) Der kontinuierliche Prozess, sicherzustellen, dass der Live-Zustand des Clusters dem in Git deklarierten Zustand entspricht und Abweichungen korrigiert werden.",
+                        "D) Das manuelle Anwenden von Konfigurationen durch einen Entwickler."
+                    ],
+                    correctAnswer: "C) Der kontinuierliche Prozess, sicherzustellen, dass der Live-Zustand des Clusters dem in Git deklarierten Zustand entspricht und Abweichungen korrigiert werden."
+                },
+                // Add more questions here if needed following the same structure
+                 {
+                    question: "6. Was löst typischerweise eine Aktualisierung im Kubernetes-Cluster aus, wenn man einen GitOps-Workflow mit Flux verwendet?",
+                    options: [
+                        "A) Ein manueller `kubectl apply`-Befehl eines Administrators.",
+                        "B) Ein neuer Commit oder Merge in das überwachte Git-Repository.",
+                        "C) Ein Neustart des Kubernetes Clusters.",
+                        "D) Eine Benachrichtigung vom Notification Controller."
+                    ],
+                    correctAnswer: "B) Ein neuer Commit oder Merge in das überwachte Git-Repository."
+                },
+                 {
+                    question: "7. Welcher Vorteil von GitOps wird durch die Git-Historie besonders unterstützt?",
+                    options: [
+                        "A) Gesteigerte Produktivität",
+                        "B) Verbesserte Sicherheit",
+                        "C) Höhere Zuverlässigkeit durch einfache Rollbacks",
+                        "D) Nachvollziehbarkeit und Audits (wer hat was wann geändert)"
+                    ],
+                    correctAnswer: "D) Nachvollziehbarkeit und Audits (wer hat was wann geändert)"
+                },
+                 {
+                    question: "8. Welcher Flux Controller ist dafür verantwortlich, Kubernetes-Manifeste (z.B. aus Kustomizations oder Helm Charts) tatsächlich im Cluster anzuwenden?",
+                     options: [
+                        "A) Source Controller und Image Controller",
+                        "B) Kustomize Controller und Helm Controller",
+                        "C) Notification Controller und Source Controller",
+                        "D) Nur der Kustomize Controller"
+                    ],
+                    correctAnswer: "B) Kustomize Controller und Helm Controller"
+                },
+                 {
+                    question: "9. Welche Organisation steht hinter Flux und hat es als \"Graduated Project\" eingestuft?",
+                    options: [
+                        "A) Apache Software Foundation",
+                        "B) Linux Foundation",
+                        "C) Cloud Native Computing Foundation (CNCF)",
+                        "D) Kubernetes Steering Committee"
+                    ],
+                    correctAnswer: "C) Cloud Native Computing Foundation (CNCF)"
+                },
+                 {
+                    question: "10. Welches andere GitOps-Werkzeug wird im Dokument als beliebte Alternative zu Flux erwähnt?",
+                    options: [
+                        "A) Jenkins X",
+                        "B) Tekton",
+                        "C) Argo CD",
+                        "D) Spinnaker"
+                    ],
+                    correctAnswer: "C) Argo CD"
+                }
+            ];
+
+            // Populate quiz form
+            if (quizForm) {
+                questions.forEach((q, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.classList.add('quiz-question', 'p-4', 'border', 'border-slate-200', 'dark:border-slate-700', 'rounded-lg');
+                    questionDiv.setAttribute('data-question-index', index);
+
+                    const questionText = document.createElement('p');
+                    questionText.classList.add('font-semibold', 'mb-4');
+                    questionText.textContent = q.question;
+                    questionDiv.appendChild(questionText);
+
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.classList.add('space-y-2');
+
+                    q.options.forEach((option, optionIndex) => {
+                        const label = document.createElement('label');
+                        label.classList.add('flex', 'items-center', 'p-2', 'rounded', 'hover:bg-slate-100', 'dark:hover:bg-slate-700', 'cursor-pointer');
+
+                        const input = document.createElement('input');
+                        input.type = 'radio';
+                        input.name = `question-${index}`;
+                        input.value = option;
+                        input.classList.add('mr-3', 'form-radio', 'h-4', 'w-4', 'text-primary', 'dark:text-primary-dark', 'focus:ring-primary', 'dark:focus:ring-primary-dark', 'dark:bg-slate-600', 'dark:border-slate-500');
+
+                        label.appendChild(input);
+                        label.appendChild(document.createTextNode(option));
+                        optionsDiv.appendChild(label);
+                    });
+
+                    questionDiv.appendChild(optionsDiv);
+                    const feedbackP = document.createElement('p'); // Placeholder for feedback
+                    feedbackP.classList.add('quiz-feedback', 'text-sm');
+                    questionDiv.appendChild(feedbackP);
+
+                    quizForm.appendChild(questionDiv);
+                });
+            }
+
+            // Handle quiz submission
+            if (submitButton && resultsContainer) {
+                submitButton.addEventListener('click', () => {
+                    let score = 0;
+                    const totalQuestions = questions.length;
+                    resultsContainer.innerHTML = ''; // Clear previous results
+
+                    questions.forEach((q, index) => {
+                        const questionDiv = quizForm.querySelector(`.quiz-question[data-question-index="${index}"]`);
+                        const feedbackP = questionDiv.querySelector('.quiz-feedback');
+                        feedbackP.textContent = ''; // Clear previous feedback
+                         feedbackP.className = 'quiz-feedback text-sm'; // Reset classes
+
+                        const selectedOption = quizForm.querySelector(`input[name="question-${index}"]:checked`);
+
+                        if (selectedOption) {
+                            if (selectedOption.value === q.correctAnswer) {
+                                score++;
+                                feedbackP.textContent = 'Richtig!';
+                                feedbackP.classList.add('quiz-correct');
+                            } else {
+                                feedbackP.textContent = `Falsch. Richtige Antwort: ${q.correctAnswer.substring(0, q.correctAnswer.indexOf(')'))})`; // Show only "C)" part
+                                feedbackP.classList.add('quiz-incorrect');
+                            }
+                        } else {
+                            feedbackP.textContent = 'Keine Antwort ausgewählt.';
+                             feedbackP.classList.add('text-muted-light', 'dark:text-muted-dark');
+                        }
+                    });
+
+                    // Display final score
+                    const scorePercentage = Math.round((score / totalQuestions) * 100);
+                    const resultMessage = document.createElement('p');
+                    resultMessage.classList.add('text-lg', 'font-bold', 'mt-4');
+                    resultMessage.textContent = `Dein Ergebnis: ${score} von ${totalQuestions} (${scorePercentage}%)`;
+                    resultsContainer.appendChild(resultMessage);
+
+                    // Scroll to results
+                    resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+            }
+
+        }); // End DOMContentLoaded
+    </script>
 
 </body>
 </html>
