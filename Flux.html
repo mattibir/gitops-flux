@@ -420,94 +420,481 @@ spec:
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // --- Dark Mode Toggle ---
-            const darkModeToggle = document.getElementById('dark-mode-toggle');
-            const darkModeToggleMobile = document.getElementById('dark-mode-toggle-mobile');
-            const sunIcon = '&#xe9ce;'; // Sun icon
-            const moonIcon = '&#xe9c4;'; // Moon icon
-            const userPrefersDark = localStorage.getItem('theme') === 'dark' ||
-                                    (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-            // Function to apply theme
-            const applyTheme = (isDark) => {
-                const currentLang = htmlElement.getAttribute('lang') || 'de';
-                if (isDark) {
-                    document.documentElement.classList.add('dark');
-                    darkModeToggle.innerHTML = `<span class="lucide text-xl">${sunIcon}</span>`;
-                    darkModeToggleMobile.innerHTML = `<span class="lucide text-xl">${sunIcon}</span>`;
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    darkModeToggle.innerHTML = `<span class="lucide text-xl">${moonIcon}</span>`;
-                     darkModeToggleMobile.innerHTML = `<span class="lucide text-xl">${moonIcon}</span>`;
-                    localStorage.setItem('theme', 'light');
+            // --- Translations Object ---
+            const translations = {
+                de: {
+                    "page.title": "GitOps & Flux Visualisiert - Eine Einführung",
+                    "nav.brand": "GitOps & Flux",
+                    "nav.introduction": "Einführung",
+                    "nav.quickstart": "Quick Start",
+                    "nav.whatisgitops": "Was ist GitOps?",
+                    "nav.whatisflux": "Was ist Flux?",
+                    "nav.workflow": "Workflow",
+                    "nav.quiz": "Quiz",
+                    "nav.conclusion": "Fazit",
+                    "nav.toggleDarkMode": "Dunkelmodus umschalten",
+                    "nav.openMenu": "Menü öffnen",
+                    "nav.closeMenu": "Menü schließen",
+                    "hero.title1": "GitOps & Flux",
+                    "hero.title2": "Visualisiert",
+                    "hero.subtitle": "Ein moderner Ansatz für Continuous Delivery auf Kubernetes. Verstehen Sie die Prinzipien und Werkzeuge, die Ihre Deployments revolutionieren können.",
+                    "hero.button": "Loslegen: Quick Start",
+                    "introduction.title": "Einführung: Die Herausforderung moderner Deployments",
+                    "introduction.p1": "Moderne Anwendungen, insbesondere auf Plattformen wie Kubernetes, bestehen oft aus vielen Komponenten und Konfigurationen. Das Management von Updates, Konsistenz über Umgebungen hinweg und die Nachvollziehbarkeit von Änderungen wird schnell komplex.",
+                    "introduction.p2": "Traditionelle CI/CD-Pipelines stoßen hier an Grenzen. Wie können wir sicherstellen, dass der <em>tatsächliche</em> Zustand unserer Infrastruktur und Anwendungen <em>immer</em> dem gewünschten Zustand entspricht, der sicher und nachvollziehbar verwaltet wird?",
+                    "introduction.p3": "Hier kommen GitOps und Werkzeuge wie Flux ins Spiel.",
+                    "quickstart.title": "Quick Start Guide: In 5 Minuten mit GitOps starten",
+                    "quickstart.prerequisites.title": "Voraussetzungen",
+                    "quickstart.prerequisites.l1": "Ein laufender Kubernetes Cluster (z.B. minikube, kind, Cloud-Cluster)",
+                    "quickstart.prerequisites.l2": "`kubectl` CLI Tool installiert und konfiguriert",
+                    "quickstart.prerequisites.l3": "Ein Git Repository (z.B. auf GitHub, GitLab)",
+                    "quickstart.install.title": "Installation & Bootstrap",
+                    "quickstart.install.step1.title": "1. Flux CLI installieren",
+                    "quickstart.install.step2.title": "2. Cluster überprüfen",
+                    "quickstart.install.step3.title": "3. Flux im Cluster installieren (Bootstrap)",
+                    "quickstart.install.step3.p1": "Passt die Werte für `--owner`, `--repository` etc. an eure Umgebung an.",
+                    "quickstart.install.step3.codecomment": "Beispiel für GitHub",
+                    "quickstart.install.step3.p2": "Dieser Befehl installiert Flux, erstellt Deploy Keys und committet die Flux-Konfiguration in dein Repository.",
+                    "quickstart.install.step4.title": "4. Beispielanwendung deployen",
+                    "quickstart.install.step4.p1": "Füge eine Kubernetes Manifest-Datei (z.B. `nginx-deployment.yaml`) in deinem Git Repository unter dem Pfad hinzu, den du bei `--path` angegeben hast (`./clusters/mein-cluster`). Flux wird diese Änderung erkennen und anwenden.",
+                    "quickstart.install.step4.codecomment": "Beispiel: ./clusters/mein-cluster/nginx-deployment.yaml",
+                    "quickstart.install.step4.codecomment2": "Flux kann auch Image-Updates automatisieren!",
+                    "quickstart.install.step4.p2": "Committe und pushe diese Datei. Flux wird sie nach kurzer Zeit im Cluster deployen!",
+                    "gitops.title": "Was ist GitOps?",
+                    "gitops.definition.title": "Definition",
+                    "gitops.definition.p1": "GitOps ist ein Betriebsmodell für Cloud-Native-Anwendungen (insbesondere Kubernetes), das Git als **Single Source of Truth** (einzige Quelle der Wahrheit) für die deklarative Infrastruktur und Anwendungsdefinitionen nutzt. Änderungen am System werden über Git Commits gesteuert und automatisch angewendet.",
+                    "gitops.benefits.title": "Warum GitOps? (Vorteile)",
+                    "gitops.benefits.l1": "<strong>Nachvollziehbarkeit:</strong> Jede Änderung ist ein Git Commit (wer, was, wann).",
+                    "gitops.benefits.l2": "<strong>Konsistenz:</strong> Git definiert den Zustand; Abweichungen werden korrigiert.",
+                    "gitops.benefits.l3": "<strong>Zuverlässigkeit:</strong> Einfache Rollbacks durch `git revert`.",
+                    "gitops.benefits.l4": "<strong>Produktivität:</strong> Entwickler nutzen bekannte Git-Workflows.",
+                    "gitops.benefits.l5": "<strong>Sicherheit:</strong> Änderungen sind auditiert und kontrolliert.",
+                    "gitops.principles.title": "Kernprinzipien",
+                    "gitops.principles.declarative.title": "Deklarativ",
+                    "gitops.principles.declarative.p1": "Der gewünschte Zustand wird beschrieben (YAML), nicht die Schritte dorthin.",
+                    "gitops.principles.versioned.title": "Versioniert in Git",
+                    "gitops.principles.versioned.p1": "Git ist die einzige Quelle der Wahrheit.",
+                    "gitops.principles.automated.title": "Automatisch angewendet",
+                    "gitops.principles.automated.p1": "Änderungen in Git werden automatisch im System umgesetzt.",
+                    "gitops.principles.reconciled.title": "Kontinuierlicher Abgleich",
+                    "gitops.principles.reconciled.p1": "Agenten stellen sicher, dass der Live-Zustand dem Git-Zustand entspricht.",
+                    "gitops.visualization.placeholder": "(Hier könnte eine Visualisierung des GitOps-Kreislaufs stehen)",
+                    "flux.title": "Was ist Flux?",
+                    "flux.tool.title": "Ein Werkzeug für GitOps",
+                    "flux.tool.p1": "Flux ist ein Set von Continuous Delivery Lösungen für Kubernetes, das offen entwickelt wird und den GitOps-Ansatz implementiert. Es überwacht Git Repositories (oder andere Quellen) und synchronisiert den deklarierten Zustand automatisch mit dem Cluster.",
+                    "flux.tool.p2": "Flux ist ein <strong class=\"text-text-light dark:text-text-dark\">CNCF Graduated Project</strong>, was seine Reife und breite Akzeptanz unterstreicht.",
+                    "flux.alternative.title": "Alternative: Argo CD",
+                    "flux.alternative.p1": "Argo CD ist ein weiteres sehr beliebtes CNCF GitOps-Werkzeug mit ähnlichen Zielen, aber einer anderen Architektur (eher Pull-basiert mit zentraler UI).",
+                    "flux.architecture.title": "Architektur: Die Controller",
+                    "flux.architecture.p1": "Flux besteht aus spezialisierten Controllern (Kubernetes Operatoren), die zusammenarbeiten:",
+                    "flux.architecture.source": "<strong>Source Controller:</strong> Holt Manifeste aus Git, Helm Repos, Buckets etc.",
+                    "flux.architecture.kustomize": "<strong>Kustomize Controller:</strong> Wendet Kustomizations an.",
+                    "flux.architecture.helm": "<strong>Helm Controller:</strong> Verwaltet Helm Releases.",
+                    "flux.architecture.notification": "<strong>Notification Controller:</strong> Sendet Benachrichtigungen (Slack, Teams etc.).",
+                    "flux.architecture.image": "<strong>Image Reflector & Automation Controller:</strong> Überwachen auf neue Container-Images und aktualisieren Git.",
+                    "flux.architecture.placeholder": "(Hier könnte ein Architektur-Diagramm stehen)",
+                    "workflow.title": "Der GitOps Workflow mit Flux",
+                    "workflow.step1.title": "Änderung in Git",
+                    "workflow.step1.p1": "Ein Entwickler oder ein Automatisierungsprozess ändert die deklarative Konfiguration (z.B. Kubernetes YAML, Kustomization, Helm Release) und pusht den Commit nach Git.",
+                    "workflow.step2.title": "Flux erkennt Änderung",
+                    "workflow.step2.p1": "Der Flux Source Controller erkennt den neuen Commit im überwachten Git Repository (oder einer anderen Quelle).",
+                    "workflow.step3.title": "Flux wendet Änderung an",
+                    "workflow.step3.p1": "Abhängig von der Konfiguration rendert der Kustomize Controller oder der Helm Controller die Manifeste und wendet sie auf den Kubernetes Cluster an.",
+                    "workflow.step4.title": "Kontinuierlicher Abgleich",
+                    "workflow.step4.p1": "Flux überwacht den Cluster weiterhin. Werden manuelle Änderungen vorgenommen (Drift), setzt Flux den Zustand automatisch auf den in Git definierten Stand zurück.",
+                    "workflow.optional.title": "(Optional) Image Automation",
+                    "workflow.optional.p1": "Wenn konfiguriert, können die Flux Image Controller neue Container-Images in einer Registry erkennen, die Image-Tags in den Git-Manifesten aktualisieren (via Commit) und somit den Workflow automatisch für Image-Updates auslösen.",
+                    "workflow.placeholder": "(Hier könnte eine Visualisierung des Workflows stehen)",
+                    "quiz.title": "Teste dein Wissen!",
+                    "quiz.submit": "Quiz auswerten",
+                    "quiz.q1.question": "1. Was ist die zentrale \"Quelle der Wahrheit\" (Single Source of Truth) im GitOps-Modell?",
+                    "quiz.q1.option1": "A) Der Kubernetes Cluster",
+                    "quiz.q1.option2": "B) Eine CI/CD-Pipeline-Konfiguration",
+                    "quiz.q1.option3": "C) Ein Git-Repository",
+                    "quiz.q1.option4": "D) Die Flux-Operatoren",
+                    "quiz.q1.answer": "C) Ein Git-Repository",
+                    "quiz.q2.question": "2. Welches Kernprinzip von GitOps beschreibt, dass der *gewünschte* Systemzustand definiert wird, nicht die Schritte dorthin?",
+                    "quiz.q2.option1": "A) Versioniert in Git",
+                    "quiz.q2.option2": "B) Deklarativ",
+                    "quiz.q2.option3": "C) Automatisch angewendet",
+                    "quiz.q2.option4": "D) Kontinuierlicher Abgleich",
+                    "quiz.q2.answer": "B) Deklarativ",
+                    "quiz.q3.question": "3. Was ist Flux im Kontext von GitOps?",
+                    "quiz.q3.option1": "A) Ein Cloud-Provider-Service",
+                    "quiz.q3.option2": "B) Eine Programmiersprache für Kubernetes",
+                    "quiz.q3.option3": "C) Ein Set von Kubernetes-Operatoren, das GitOps implementiert",
+                    "quiz.q3.option4": "D) Ein alternatives Versionskontrollsystem zu Git",
+                    "quiz.q3.answer": "C) Ein Set von Kubernetes-Operatoren, das GitOps implementiert",
+                    "quiz.q4.question": "4. Welcher Flux Controller ist primär dafür zuständig, konfigurierte Quellen wie Git-Repositories auf Änderungen zu überwachen?",
+                    "quiz.q4.option1": "A) Helm Controller",
+                    "quiz.q4.option2": "B) Kustomize Controller",
+                    "quiz.q4.option3": "C) Notification Controller",
+                    "quiz.q4.option4": "D) Source Controller",
+                    "quiz.q4.answer": "D) Source Controller",
+                    "quiz.q5.question": "5. Was bedeutet der Begriff \"Reconciliation\" (Abgleich) im Zusammenhang mit Flux?",
+                    "quiz.q5.option1": "A) Das initiale Installieren von Flux im Cluster.",
+                    "quiz.q5.option2": "B) Das Senden von Benachrichtigungen bei Fehlern.",
+                    "quiz.q5.option3": "C) Der kontinuierliche Prozess, sicherzustellen, dass der Live-Zustand des Clusters dem in Git deklarierten Zustand entspricht und Abweichungen korrigiert werden.",
+                    "quiz.q5.option4": "D) Das manuelle Anwenden von Konfigurationen durch einen Entwickler.",
+                    "quiz.q5.answer": "C) Der kontinuierliche Prozess, sicherzustellen, dass der Live-Zustand des Clusters dem in Git deklarierten Zustand entspricht und Abweichungen korrigiert werden.",
+                    "quiz.q6.question": "6. Was löst typischerweise eine Aktualisierung im Kubernetes-Cluster aus, wenn man einen GitOps-Workflow mit Flux verwendet?",
+                    "quiz.q6.option1": "A) Ein manueller `kubectl apply`-Befehl eines Administrators.",
+                    "quiz.q6.option2": "B) Ein neuer Commit oder Merge in das überwachte Git-Repository.",
+                    "quiz.q6.option3": "C) Ein Neustart des Kubernetes Clusters.",
+                    "quiz.q6.option4": "D) Eine Benachrichtigung vom Notification Controller.",
+                    "quiz.q6.answer": "B) Ein neuer Commit oder Merge in das überwachte Git-Repository.",
+                    "quiz.q7.question": "7. Welcher Vorteil von GitOps wird durch die Git-Historie besonders unterstützt?",
+                    "quiz.q7.option1": "A) Gesteigerte Produktivität",
+                    "quiz.q7.option2": "B) Verbesserte Sicherheit",
+                    "quiz.q7.option3": "C) Höhere Zuverlässigkeit durch einfache Rollbacks",
+                    "quiz.q7.option4": "D) Nachvollziehbarkeit und Audits (wer hat was wann geändert)",
+                    "quiz.q7.answer": "D) Nachvollziehbarkeit und Audits (wer hat was wann geändert)",
+                    "quiz.q8.question": "8. Welcher Flux Controller ist dafür verantwortlich, Kubernetes-Manifeste (z.B. aus Kustomizations oder Helm Charts) tatsächlich im Cluster anzuwenden?",
+                    "quiz.q8.option1": "A) Source Controller und Image Controller",
+                    "quiz.q8.option2": "B) Kustomize Controller und Helm Controller",
+                    "quiz.q8.option3": "C) Notification Controller und Source Controller",
+                    "quiz.q8.option4": "D) Nur der Kustomize Controller",
+                    "quiz.q8.answer": "B) Kustomize Controller und Helm Controller",
+                    "quiz.q9.question": "9. Welche Organisation steht hinter Flux und hat es als \"Graduated Project\" eingestuft?",
+                    "quiz.q9.option1": "A) Apache Software Foundation",
+                    "quiz.q9.option2": "B) Linux Foundation",
+                    "quiz.q9.option3": "C) Cloud Native Computing Foundation (CNCF)",
+                    "quiz.q9.option4": "D) Kubernetes Steering Committee",
+                    "quiz.q9.answer": "C) Cloud Native Computing Foundation (CNCF)",
+                    "quiz.q10.question": "10. Welches andere GitOps-Werkzeug wird im Dokument als beliebte Alternative zu Flux erwähnt?",
+                    "quiz.q10.option1": "A) Jenkins X",
+                    "quiz.q10.option2": "B) Tekton",
+                    "quiz.q10.option3": "C) Argo CD",
+                    "quiz.q10.option4": "D) Spinnaker",
+                    "quiz.q10.answer": "C) Argo CD",
+                    "quiz.feedback.correct": "Richtig!",
+                    "quiz.feedback.incorrect": "Falsch. Richtige Antwort: ",
+                    "quiz.feedback.noanswer": "Keine Antwort ausgewählt.",
+                    "quiz.results.score": "Dein Ergebnis: {score} von {total} ({percentage}%)", // Placeholders for dynamic values
+                    "conclusion.title": "Fazit: GitOps mit Flux als Erfolgsfaktor",
+                    "conclusion.p1": "GitOps, implementiert mit Werkzeugen wie Flux, bietet einen robusten, transparenten und automatisierten Weg, um Kubernetes-Cluster und Anwendungen zu verwalten.",
+                    "conclusion.l1": "Es etabliert Git als verlässliche Quelle der Wahrheit.",
+                    "conclusion.l2": "Es fördert Konsistenz und Wiederholbarkeit über Umgebungen hinweg.",
+                    "conclusion.l3": "Es vereinfacht Rollbacks und Audits erheblich.",
+                    "conclusion.l4": "Es verbessert die Zusammenarbeit zwischen Entwicklungs- und Betriebsteams.",
+                    "conclusion.l5": "Es erhöht die Sicherheit durch kontrollierte, automatisierte Änderungen.",
+                    "conclusion.p2": "Durch die Automatisierung des Abgleichs zwischen dem gewünschten Zustand (Git) und dem tatsächlichen Zustand (Cluster) ermöglicht Flux eine zuverlässigere und effizientere Continuous Delivery Pipeline für Cloud-Native-Umgebungen.",
+                    "conclusion.button": "Zur Flux Dokumentation",
+                    "footer.p1": "Visualisierung erstellt zur Erklärung von GitOps und Flux.",
+                    "footer.p2": "Stand: April 2025. Basierend auf dem Dokument \"GitOps & Flux Visualisiert - Eine Einführung\".",
+                    "footer.p3": "&copy; 2025 - Generiert von Gemini.",
+                    "common.copy": "Copy",
+                    "common.copied": "Copied!",
+                    "common.copyError": "Error"
+                },
+                en: {
+                    "page.title": "GitOps & Flux Visualized - An Introduction",
+                    "nav.brand": "GitOps & Flux",
+                    "nav.introduction": "Introduction",
+                    "nav.quickstart": "Quick Start",
+                    "nav.whatisgitops": "What is GitOps?",
+                    "nav.whatisflux": "What is Flux?",
+                    "nav.workflow": "Workflow",
+                    "nav.quiz": "Quiz",
+                    "nav.conclusion": "Conclusion",
+                    "nav.toggleDarkMode": "Toggle Dark Mode",
+                    "nav.openMenu": "Open Menu",
+                    "nav.closeMenu": "Close Menu",
+                    "hero.title1": "GitOps & Flux",
+                    "hero.title2": "Visualized",
+                    "hero.subtitle": "A modern approach to Continuous Delivery on Kubernetes. Understand the principles and tools that can revolutionize your deployments.",
+                    "hero.button": "Get Started: Quick Start",
+                    "introduction.title": "Introduction: The Challenge of Modern Deployments",
+                    "introduction.p1": "Modern applications, especially on platforms like Kubernetes, often consist of many components and configurations. Managing updates, ensuring consistency across environments, and maintaining traceability of changes quickly becomes complex.",
+                    "introduction.p2": "Traditional CI/CD pipelines hit their limits here. How can we ensure that the <em>actual</em> state of our infrastructure and applications <em>always</em> matches the desired state, which is managed securely and traceably?",
+                    "introduction.p3": "This is where GitOps and tools like Flux come into play.",
+                    "quickstart.title": "Quick Start Guide: Get started with GitOps in 5 minutes",
+                    "quickstart.prerequisites.title": "Prerequisites",
+                    "quickstart.prerequisites.l1": "A running Kubernetes cluster (e.g., minikube, kind, cloud cluster)",
+                    "quickstart.prerequisites.l2": "`kubectl` CLI tool installed and configured",
+                    "quickstart.prerequisites.l3": "A Git repository (e.g., on GitHub, GitLab)",
+                    "quickstart.install.title": "Installation & Bootstrap",
+                    "quickstart.install.step1.title": "1. Install Flux CLI",
+                    "quickstart.install.step2.title": "2. Check Cluster",
+                    "quickstart.install.step3.title": "3. Install Flux in Cluster (Bootstrap)",
+                    "quickstart.install.step3.p1": "Adjust the values for `--owner`, `--repository`, etc., to your environment.",
+                    "quickstart.install.step3.codecomment": "Example for GitHub",
+                    "quickstart.install.step3.p2": "This command installs Flux, creates deploy keys, and commits the Flux configuration to your repository.",
+                    "quickstart.install.step4.title": "4. Deploy Example Application",
+                    "quickstart.install.step4.p1": "Add a Kubernetes manifest file (e.g., `nginx-deployment.yaml`) to your Git repository under the path specified with `--path` (`./clusters/my-cluster`). Flux will detect this change and apply it.",
+                    "quickstart.install.step4.codecomment": "Example: ./clusters/my-cluster/nginx-deployment.yaml",
+                    "quickstart.install.step4.codecomment2": "Flux can also automate image updates!",
+                    "quickstart.install.step4.p2": "Commit and push this file. Flux will deploy it to the cluster shortly!",
+                    "gitops.title": "What is GitOps?",
+                    "gitops.definition.title": "Definition",
+                    "gitops.definition.p1": "GitOps is an operating model for cloud-native applications (especially Kubernetes) that uses Git as the **Single Source of Truth** for declarative infrastructure and application definitions. System changes are managed through Git commits and applied automatically.",
+                    "gitops.benefits.title": "Why GitOps? (Benefits)",
+                    "gitops.benefits.l1": "<strong>Traceability:</strong> Every change is a Git commit (who, what, when).",
+                    "gitops.benefits.l2": "<strong>Consistency:</strong> Git defines the state; deviations are corrected.",
+                    "gitops.benefits.l3": "<strong>Reliability:</strong> Easy rollbacks via `git revert`.",
+                    "gitops.benefits.l4": "<strong>Productivity:</strong> Developers use familiar Git workflows.",
+                    "gitops.benefits.l5": "<strong>Security:</strong> Changes are audited and controlled.",
+                    "gitops.principles.title": "Core Principles",
+                    "gitops.principles.declarative.title": "Declarative",
+                    "gitops.principles.declarative.p1": "The desired state is described (YAML), not the steps to get there.",
+                    "gitops.principles.versioned.title": "Versioned in Git",
+                    "gitops.principles.versioned.p1": "Git is the single source of truth.",
+                    "gitops.principles.automated.title": "Applied Automatically",
+                    "gitops.principles.automated.p1": "Changes in Git are automatically applied to the system.",
+                    "gitops.principles.reconciled.title": "Continuously Reconciled",
+                    "gitops.principles.reconciled.p1": "Agents ensure the live state matches the Git state.",
+                    "gitops.visualization.placeholder": "(A visualization of the GitOps cycle could go here)",
+                    "flux.title": "What is Flux?",
+                    "flux.tool.title": "A Tool for GitOps",
+                    "flux.tool.p1": "Flux is a set of continuous delivery solutions for Kubernetes, openly developed, that implements the GitOps approach. It monitors Git repositories (or other sources) and automatically synchronizes the declared state with the cluster.",
+                    "flux.tool.p2": "Flux is a <strong class=\"text-text-light dark:text-text-dark\">CNCF Graduated Project</strong>, underscoring its maturity and broad adoption.",
+                    "flux.alternative.title": "Alternative: Argo CD",
+                    "flux.alternative.p1": "Argo CD is another very popular CNCF GitOps tool with similar goals but a different architecture (more pull-based with a central UI).",
+                    "flux.architecture.title": "Architecture: The Controllers",
+                    "flux.architecture.p1": "Flux consists of specialized controllers (Kubernetes operators) that work together:",
+                    "flux.architecture.source": "<strong>Source Controller:</strong> Fetches manifests from Git, Helm repos, buckets, etc.",
+                    "flux.architecture.kustomize": "<strong>Kustomize Controller:</strong> Applies Kustomizations.",
+                    "flux.architecture.helm": "<strong>Helm Controller:</strong> Manages Helm releases.",
+                    "flux.architecture.notification": "<strong>Notification Controller:</strong> Sends notifications (Slack, Teams, etc.).",
+                    "flux.architecture.image": "<strong>Image Reflector & Automation Controller:</strong> Monitor for new container images and update Git.",
+                    "flux.architecture.placeholder": "(An architecture diagram could go here)",
+                    "workflow.title": "The GitOps Workflow with Flux",
+                    "workflow.step1.title": "Change in Git",
+                    "workflow.step1.p1": "A developer or automation process changes the declarative configuration (e.g., Kubernetes YAML, Kustomization, Helm Release) and pushes the commit to Git.",
+                    "workflow.step2.title": "Flux Detects Change",
+                    "workflow.step2.p1": "The Flux Source Controller detects the new commit in the monitored Git repository (or other source).",
+                    "workflow.step3.title": "Flux Applies Change",
+                    "workflow.step3.p1": "Depending on the configuration, the Kustomize Controller or Helm Controller renders the manifests and applies them to the Kubernetes cluster.",
+                    "workflow.step4.title": "Continuous Reconciliation",
+                    "workflow.step4.p1": "Flux continues to monitor the cluster. If manual changes are made (drift), Flux automatically reverts the state back to the one defined in Git.",
+                    "workflow.optional.title": "(Optional) Image Automation",
+                    "workflow.optional.p1": "If configured, the Flux Image Controllers can detect new container images in a registry, update the image tags in the Git manifests (via commit), and thus automatically trigger the workflow for image updates.",
+                    "workflow.placeholder": "(A visualization of the workflow could go here)",
+                    "quiz.title": "Test Your Knowledge!",
+                    "quiz.submit": "Submit Quiz",
+                    "quiz.q1.question": "1. What is the central \"Source of Truth\" in the GitOps model?",
+                    "quiz.q1.option1": "A) The Kubernetes Cluster",
+                    "quiz.q1.option2": "B) A CI/CD Pipeline Configuration",
+                    "quiz.q1.option3": "C) A Git Repository",
+                    "quiz.q1.option4": "D) The Flux Operators",
+                    "quiz.q1.answer": "C) A Git Repository",
+                    "quiz.q2.question": "2. Which core principle of GitOps describes defining the *desired* system state, not the steps to get there?",
+                    "quiz.q2.option1": "A) Versioned in Git",
+                    "quiz.q2.option2": "B) Declarative",
+                    "quiz.q2.option3": "C) Applied Automatically",
+                    "quiz.q2.option4": "D) Continuously Reconciled",
+                    "quiz.q2.answer": "B) Declarative",
+                    "quiz.q3.question": "3. What is Flux in the context of GitOps?",
+                    "quiz.q3.option1": "A) A Cloud Provider Service",
+                    "quiz.q3.option2": "B) A Programming Language for Kubernetes",
+                    "quiz.q3.option3": "C) A set of Kubernetes operators implementing GitOps",
+                    "quiz.q3.option4": "D) An alternative version control system to Git",
+                    "quiz.q3.answer": "C) A set of Kubernetes operators implementing GitOps",
+                    "quiz.q4.question": "4. Which Flux controller is primarily responsible for monitoring configured sources like Git repositories for changes?",
+                    "quiz.q4.option1": "A) Helm Controller",
+                    "quiz.q4.option2": "B) Kustomize Controller",
+                    "quiz.q4.option3": "C) Notification Controller",
+                    "quiz.q4.option4": "D) Source Controller",
+                    "quiz.q4.answer": "D) Source Controller",
+                    "quiz.q5.question": "5. What does the term \"Reconciliation\" mean in the context of Flux?",
+                    "quiz.q5.option1": "A) The initial installation of Flux in the cluster.",
+                    "quiz.q5.option2": "B) Sending notifications on errors.",
+                    "quiz.q5.option3": "C) The continuous process of ensuring the live state of the cluster matches the state declared in Git and correcting drifts.",
+                    "quiz.q5.option4": "D) Manually applying configurations by a developer.",
+                    "quiz.q5.answer": "C) The continuous process of ensuring the live state of the cluster matches the state declared in Git and correcting drifts.",
+                    "quiz.q6.question": "6. What typically triggers an update in the Kubernetes cluster when using a GitOps workflow with Flux?",
+                    "quiz.q6.option1": "A) A manual `kubectl apply` command by an administrator.",
+                    "quiz.q6.option2": "B) A new commit or merge to the monitored Git repository.",
+                    "quiz.q6.option3": "C) A restart of the Kubernetes cluster.",
+                    "quiz.q6.option4": "D) A notification from the Notification Controller.",
+                    "quiz.q6.answer": "B) A new commit or merge to the monitored Git repository.",
+                    "quiz.q7.question": "7. Which benefit of GitOps is particularly supported by the Git history?",
+                    "quiz.q7.option1": "A) Increased Productivity",
+                    "quiz.q7.option2": "B) Improved Security",
+                    "quiz.q7.option3": "C) Higher Reliability through easy rollbacks",
+                    "quiz.q7.option4": "D) Traceability and Audits (who changed what when)",
+                    "quiz.q7.answer": "D) Traceability and Audits (who changed what when)",
+                    "quiz.q8.question": "8. Which Flux controller is responsible for actually applying Kubernetes manifests (e.g., from Kustomizations or Helm Charts) to the cluster?",
+                    "quiz.q8.option1": "A) Source Controller and Image Controller",
+                    "quiz.q8.option2": "B) Kustomize Controller and Helm Controller",
+                    "quiz.q8.option3": "C) Notification Controller and Source Controller",
+                    "quiz.q8.option4": "D) Only the Kustomize Controller",
+                    "quiz.q8.answer": "B) Kustomize Controller and Helm Controller",
+                    "quiz.q9.question": "9. Which organization is behind Flux and has classified it as a \"Graduated Project\"?",
+                    "quiz.q9.option1": "A) Apache Software Foundation",
+                    "quiz.q9.option2": "B) Linux Foundation",
+                    "quiz.q9.option3": "C) Cloud Native Computing Foundation (CNCF)",
+                    "quiz.q9.option4": "D) Kubernetes Steering Committee",
+                    "quiz.q9.answer": "C) Cloud Native Computing Foundation (CNCF)",
+                    "quiz.q10.question": "10. Which other GitOps tool is mentioned in the document as a popular alternative to Flux?",
+                    "quiz.q10.option1": "A) Jenkins X",
+                    "quiz.q10.option2": "B) Tekton",
+                    "quiz.q10.option3": "C) Argo CD",
+                    "quiz.q10.option4": "D) Spinnaker",
+                    "quiz.q10.answer": "C) Argo CD",
+                    "quiz.feedback.correct": "Correct!",
+                    "quiz.feedback.incorrect": "Incorrect. Correct answer: ",
+                    "quiz.feedback.noanswer": "No answer selected.",
+                    "quiz.results.score": "Your score: {score} out of {total} ({percentage}%)",
+                    "conclusion.title": "Conclusion: GitOps with Flux as a Success Factor",
+                    "conclusion.p1": "GitOps, implemented with tools like Flux, offers a robust, transparent, and automated way to manage Kubernetes clusters and applications.",
+                    "conclusion.l1": "It establishes Git as a reliable source of truth.",
+                    "conclusion.l2": "It promotes consistency and repeatability across environments.",
+                    "conclusion.l3": "It significantly simplifies rollbacks and audits.",
+                    "conclusion.l4": "It improves collaboration between development and operations teams.",
+                    "conclusion.l5": "It enhances security through controlled, automated changes.",
+                    "conclusion.p2": "By automating the reconciliation between the desired state (Git) and the actual state (cluster), Flux enables a more reliable and efficient Continuous Delivery pipeline for cloud-native environments.",
+                    "conclusion.button": "To Flux Documentation",
+                    "footer.p1": "Visualization created to explain GitOps and Flux.",
+                    "footer.p2": "Status: April 2025. Based on the document \"GitOps & Flux Visualized - An Introduction\".",
+                    "footer.p3": "&copy; 2025 - Generated by Gemini.",
+                    "common.copy": "Copy",
+                    "common.copied": "Copied!",
+                    "common.copyError": "Error"
                 }
-                // Update aria-label for dark mode toggles based on language
-                const toggleLangLabel = lang === 'de' ? 'Switch to English' : 'Zu Deutsch wechseln';
-                 if(darkModeToggle) darkModeToggle.setAttribute('aria-label', toggleLangLabel);
-                 if(darkModeToggleMobile) darkModeToggleMobile.setAttribute('aria-label', toggleLangLabel);
             };
 
-            // Set initial theme
-            applyTheme(userPrefersDark);
-
-            // Add event listeners
-             [darkModeToggle, darkModeToggleMobile].forEach(toggle => {
-                if(toggle) {
-                    toggle.addEventListener('click', () => {
-                        const isCurrentlyDark = document.documentElement.classList.contains('dark');
-                        applyTheme(!isCurrentlyDark);
-                    });
-                }
-            });
-
-            // --- Language Toggle & Translation Logic ---
+            // Define elements needed globally first
+            const htmlElement = document.documentElement;
             const languageToggle = document.getElementById('language-toggle');
             const languageToggleMobile = document.getElementById('language-toggle-mobile');
-            const htmlElement = document.documentElement;
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const darkModeToggleMobile = document.getElementById('dark-mode-toggle-mobile');
+            const quizForm = document.getElementById('quiz-form');
+            const submitButton = document.getElementById('submit-quiz');
+            const resultsContainer = document.getElementById('quiz-results');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileCloseButton = document.getElementById('mobile-close-button');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+            // Define functions
+            const applyTheme = (isDark) => {
+                const currentLang = htmlElement.getAttribute('lang') || 'de';
+                const toggleLabel = translations[currentLang]?.['nav.toggleDarkMode'] || 'Toggle Dark Mode';
+                const sunIcon = '&#xe9ce;';
+                const moonIcon = '&#xe9c4;';
+
+                if (isDark) {
+                    htmlElement.classList.add('dark');
+                    if(darkModeToggle) darkModeToggle.innerHTML = `<span class="lucide text-xl">${sunIcon}</span>`;
+                    if(darkModeToggleMobile) darkModeToggleMobile.innerHTML = `<span class="lucide text-xl">${sunIcon}</span>`;
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    htmlElement.classList.remove('dark');
+                    if(darkModeToggle) darkModeToggle.innerHTML = `<span class="lucide text-xl">${moonIcon}</span>`;
+                    if(darkModeToggleMobile) darkModeToggleMobile.innerHTML = `<span class="lucide text-xl">${moonIcon}</span>`;
+                    localStorage.setItem('theme', 'light');
+                }
+                if(darkModeToggle) darkModeToggle.setAttribute('aria-label', toggleLabel);
+                if(darkModeToggleMobile) darkModeToggleMobile.setAttribute('aria-label', toggleLabel);
+            };
+
+            const populateQuiz = (lang) => {
+                if (!quizForm) return;
+                quizForm.innerHTML = ''; // Clear existing questions
+
+                for (let i = 1; i <= 10; i++) { // Assuming 10 questions
+                    const qKeyBase = `quiz.q${i}`;
+                    const questionTextKey = `${qKeyBase}.question`;
+                    const answerKey = `${qKeyBase}.answer`;
+
+                    const questionText = translations[lang]?.[questionTextKey];
+                    const correctAnswerValue = translations['de']?.[answerKey]; // Correct answer stored under 'de' key for consistency
+                    const correctAnswerText = translations[lang]?.[answerKey]; // Display text for correct answer in current lang
+
+                    if (!questionText || !correctAnswerValue) {
+                        console.warn(`Missing translation for quiz question ${i} in language ${lang}`);
+                        continue; // Skip this question if data is missing
+                    }
+
+                    const questionDiv = document.createElement('div');
+                    questionDiv.classList.add('quiz-question', 'p-4', 'border', 'border-slate-200', 'dark:border-slate-700', 'rounded-lg');
+                    questionDiv.setAttribute('data-question-index', i - 1);
+                    questionDiv.setAttribute('data-correct-answer', correctAnswerValue);
+                    questionDiv.setAttribute('data-correct-answer-display', correctAnswerText);
+
+                    const questionP = document.createElement('p');
+                    questionP.classList.add('font-semibold', 'mb-4');
+                    questionP.innerHTML = questionText;
+                    questionDiv.appendChild(questionP);
+
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.classList.add('space-y-2');
+
+                    for (let j = 1; j <= 4; j++) {
+                        const optionKey = `${qKeyBase}.option${j}`;
+                        const optionText = translations[lang]?.[optionKey];
+                        const optionValue = translations['de']?.[optionKey]; // Use 'de' value for comparison consistency
+
+                        if (!optionText || !optionValue) {
+                            console.warn(`Missing translation for quiz question ${i} option ${j} in language ${lang}`);
+                            continue;
+                        }
+
+                        const label = document.createElement('label');
+                        label.classList.add('flex', 'items-center', 'p-2', 'rounded', 'hover:bg-slate-100', 'dark:hover:bg-slate-700', 'cursor-pointer');
+
+                        const input = document.createElement('input');
+                        input.type = 'radio';
+                        input.name = `question-${i - 1}`;
+                        input.value = optionValue;
+                        input.classList.add('mr-3', 'form-radio', 'h-4', 'w-4', 'text-primary', 'dark:text-primary-dark', 'focus:ring-primary', 'dark:focus:ring-primary-dark', 'dark:bg-slate-600', 'dark:border-slate-500');
+
+                        label.appendChild(input);
+                        const textNode = document.createElement('span');
+                        textNode.innerHTML = optionText;
+                        label.appendChild(textNode);
+                        optionsDiv.appendChild(label);
+                    }
+
+                    questionDiv.appendChild(optionsDiv);
+                    const feedbackP = document.createElement('p');
+                    feedbackP.classList.add('quiz-feedback', 'text-sm');
+                    questionDiv.appendChild(feedbackP);
+
+                    quizForm.appendChild(questionDiv);
+                }
+            };
 
             const translatePage = (lang) => {
                 document.querySelectorAll('[data-translate-key]').forEach(el => {
                     const key = el.getAttribute('data-translate-key');
                     const translation = translations[lang]?.[key];
-                    if (translation !== undefined) { // Check for undefined to handle potentially empty strings
-                        // Use innerHTML to allow for simple HTML tags like <strong>
+                    if (translation !== undefined) {
                         el.innerHTML = translation;
                     } else {
                         console.warn(`Translation key not found for language '${lang}': ${key}`);
                     }
                 });
-                 // Translate aria-labels
                 document.querySelectorAll('[data-translate-aria-label]').forEach(el => {
                     const key = el.getAttribute('data-translate-aria-label');
                     const translation = translations[lang]?.[key];
-                     if (translation !== undefined) {
+                    if (translation !== undefined) {
                         el.setAttribute('aria-label', translation);
                     } else {
-                         console.warn(`Translation key not found for aria-label language '${lang}': ${key}`);
+                        console.warn(`Translation key not found for aria-label language '${lang}': ${key}`);
                     }
                 });
-                 // Translate copy buttons (simple case, only text)
                 document.querySelectorAll('.copy-button').forEach(btn => {
-                    // Check if the button text is not 'Copied!' or 'Error'
                     const copiedText = translations[lang]?.['common.copied'] || 'Copied!';
                     const errorText = translations[lang]?.['common.copyError'] || 'Error';
-                    if (btn.textContent !== copiedText && btn.textContent !== errorText) {
-                         btn.textContent = translations[lang]?.['common.copy'] || 'Copy';
+                    // Reset button text only if it's not showing 'Copied!' or 'Error'
+                    if (btn.textContent === translations['de']?.['common.copy'] || btn.textContent === translations['en']?.['common.copy'] || 
+                        (btn.textContent !== copiedText && btn.textContent !== errorText)) {
+                        btn.textContent = translations[lang]?.['common.copy'] || 'Copy';
                     }
                 });
-
-                // Update quiz questions (needs specific handling as they are dynamically generated)
                 populateQuiz(lang);
-
-                 // Re-apply theme to update dark mode toggle aria-label
-                applyTheme(document.documentElement.classList.contains('dark'));
+                // Re-apply theme after translation ensures labels are correct
+                if (typeof applyTheme === 'function') {
+                   applyTheme(document.documentElement.classList.contains('dark'));
+                }
             };
 
             const updateLanguageButton = (button, lang) => {
                 if (button) {
                     button.textContent = lang === 'de' ? 'EN' : 'DE';
-                    // Update aria-label too
                     const toggleLangLabel = lang === 'de' ? 'Switch to English' : 'Zu Deutsch wechseln';
                     button.setAttribute('aria-label', toggleLangLabel);
                 }
@@ -520,161 +907,84 @@ spec:
                 updateLanguageButton(languageToggle, newLang);
                 updateLanguageButton(languageToggleMobile, newLang);
                 translatePage(newLang);
-                // Store preference
-                 localStorage.setItem('language', newLang);
+                localStorage.setItem('language', newLang);
             };
 
-             // Determine initial language (e.g., from localStorage or browser settings, fallback to 'de')
+            // Determine initial language
             let initialLang = localStorage.getItem('language') || htmlElement.getAttribute('lang') || 'de';
-             // Ensure initialLang is either 'de' or 'en'
-            if (initialLang !== 'de' && initialLang !== 'en') {
-                initialLang = 'de';
-            }
-            htmlElement.setAttribute('lang', initialLang); // Ensure HTML lang is set correctly
+            if (initialLang !== 'de' && initialLang !== 'en') initialLang = 'de';
+            htmlElement.setAttribute('lang', initialLang);
             updateLanguageButton(languageToggle, initialLang);
             updateLanguageButton(languageToggleMobile, initialLang);
 
-            // Add event listeners to language toggles
+            // --- Event Listeners ---
+            // Language Toggle
             if (languageToggle) languageToggle.addEventListener('click', toggleLanguage);
             if (languageToggleMobile) languageToggleMobile.addEventListener('click', toggleLanguage);
 
+            // Dark Mode Toggle
+            const userPrefersDark = localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            [darkModeToggle, darkModeToggleMobile].forEach(toggle => {
+                if(toggle) {
+                    toggle.addEventListener('click', () => {
+                        const isCurrentlyDark = document.documentElement.classList.contains('dark');
+                        applyTheme(!isCurrentlyDark);
+                    });
+                }
+            });
 
-            // --- Mobile Menu Toggle ---
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const mobileCloseButton = document.getElementById('mobile-close-button');
-            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-
+            // Mobile Menu
             if (mobileMenuButton && mobileMenu && mobileCloseButton) {
                 mobileMenuButton.addEventListener('click', () => {
                     mobileMenu.classList.remove('hidden', '-translate-x-full');
                     mobileMenu.classList.add('translate-x-0');
                 });
-
                 mobileCloseButton.addEventListener('click', () => {
                     mobileMenu.classList.remove('translate-x-0');
                     mobileMenu.classList.add('-translate-x-full');
-                    // Add hidden after transition duration (300ms)
                     setTimeout(() => {
-                       // Re-add hidden if it's still closed, prevents race conditions
                        if(mobileMenu.classList.contains('-translate-x-full')) {
                             mobileMenu.classList.add('hidden');
                        }
                     }, 300);
                 });
-
-                // Close menu when a link is clicked
                 mobileNavLinks.forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileCloseButton.click(); // Simulate click on close button
-                    });
+                    link.addEventListener('click', () => mobileCloseButton.click());
                 });
             }
 
-
-            // --- Smooth Scrolling ---
-            // Already handled by Tailwind's `scroll-smooth` class on <html> and standard anchor links.
-
-            // --- Copy Button for Code Blocks ---
-             const codeBlocks = document.querySelectorAll('pre[class*="language-"]');
+            // Copy Buttons
+            const codeBlocks = document.querySelectorAll('pre[class*="language-"]');
             codeBlocks.forEach(block => {
                 const copyButton = block.querySelector('.copy-button');
                 const codeElement = block.querySelector('code');
                 if (copyButton && codeElement) {
-                    // Initial text is set during translatePage
                     copyButton.addEventListener('click', () => {
-                        const lang = htmlElement.getAttribute('lang') || 'de'; // Get current lang at click time
+                        const lang = htmlElement.getAttribute('lang') || 'de';
                         const codeToCopy = codeElement.innerText;
                         navigator.clipboard.writeText(codeToCopy).then(() => {
                             copyButton.textContent = translations[lang]?.['common.copied'] || 'Copied!';
                             setTimeout(() => {
-                                copyButton.textContent = translations[lang]?.['common.copy'] || 'Copy';
+                                // Reset text only if it wasn't changed by translation in the meantime
+                                 if (copyButton.textContent === (translations[lang]?.['common.copied'] || 'Copied!')) {
+                                    copyButton.textContent = translations[lang]?.['common.copy'] || 'Copy';
+                                 }
                             }, 2000);
                         }).catch(err => {
                             console.error('Failed to copy code: ', err);
-                            copyButton.textContent = translations[lang]?.['common.copyError'] || 'Error';
-                             setTimeout(() => {
-                                copyButton.textContent = translations[lang]?.['common.copy'] || 'Copy';
+                             const errorText = translations[lang]?.['common.copyError'] || 'Error';
+                            copyButton.textContent = errorText;
+                            setTimeout(() => {
+                                 if (copyButton.textContent === errorText) {
+                                    copyButton.textContent = translations[lang]?.['common.copy'] || 'Copy';
+                                 }
                             }, 2000);
                         });
                     });
                 }
             });
 
-
-            // --- Quiz Logic ---
-            const quizForm = document.getElementById('quiz-form');
-            const submitButton = document.getElementById('submit-quiz');
-            const resultsContainer = document.getElementById('quiz-results');
-
-            const populateQuiz = (lang) => {
-                if (!quizForm) return;
-                quizForm.innerHTML = ''; // Clear existing questions
-
-                 for (let i = 1; i <= 10; i++) { // Assuming 10 questions
-                    const qKeyBase = `quiz.q${i}`;
-                    const questionTextKey = `${qKeyBase}.question`;
-                    const answerKey = `${qKeyBase}.answer`;
-
-                    const questionText = translations[lang]?.[questionTextKey];
-                    const correctAnswerValue = translations['de']?.[answerKey]; // Correct answer stored under 'de' key for consistency
-                    const correctAnswerText = translations[lang]?.[answerKey]; // Display text for correct answer in current lang
-
-                    if (!questionText || !correctAnswerValue) {
-                         console.warn(`Missing translation for quiz question ${i} in language ${lang}`);
-                         continue; // Skip this question if data is missing
-                    }
-
-                    const questionDiv = document.createElement('div');
-                    questionDiv.classList.add('quiz-question', 'p-4', 'border', 'border-slate-200', 'dark:border-slate-700', 'rounded-lg');
-                    questionDiv.setAttribute('data-question-index', i - 1); // 0-based index
-                    questionDiv.setAttribute('data-correct-answer', correctAnswerValue); // Store the 'de' version for checking
-                    questionDiv.setAttribute('data-correct-answer-display', correctAnswerText); // Store the display version for feedback
-
-                    const questionP = document.createElement('p');
-                    questionP.classList.add('font-semibold', 'mb-4');
-                    questionP.innerHTML = questionText; // Use innerHTML for potential <em> tags etc.
-                    questionDiv.appendChild(questionP);
-
-                    const optionsDiv = document.createElement('div');
-                    optionsDiv.classList.add('space-y-2');
-
-                     for (let j = 1; j <= 4; j++) { // Assuming 4 options
-                        const optionKey = `${qKeyBase}.option${j}`;
-                        const optionText = translations[lang]?.[optionKey];
-                        const optionValue = translations['de']?.[optionKey]; // Use 'de' value for comparison consistency
-
-                         if (!optionText || !optionValue) {
-                             console.warn(`Missing translation for quiz question ${i} option ${j} in language ${lang}`);
-                             continue;
-                         }
-
-                        const label = document.createElement('label');
-                        label.classList.add('flex', 'items-center', 'p-2', 'rounded', 'hover:bg-slate-100', 'dark:hover:bg-slate-700', 'cursor-pointer');
-
-                        const input = document.createElement('input');
-                        input.type = 'radio';
-                        input.name = `question-${i - 1}`;
-                        input.value = optionValue; // Value is the 'de' version
-                        input.classList.add('mr-3', 'form-radio', 'h-4', 'w-4', 'text-primary', 'dark:text-primary-dark', 'focus:ring-primary', 'dark:focus:ring-primary-dark', 'dark:bg-slate-600', 'dark:border-slate-500');
-
-                        label.appendChild(input);
-                        const textNode = document.createElement('span'); // Use span for innerHTML
-                        textNode.innerHTML = optionText; // Display text is translated, allow HTML
-                        label.appendChild(textNode);
-                        optionsDiv.appendChild(label);
-                     }
-
-                    questionDiv.appendChild(optionsDiv);
-                    const feedbackP = document.createElement('p');
-                    feedbackP.classList.add('quiz-feedback', 'text-sm');
-                    questionDiv.appendChild(feedbackP);
-
-                    quizForm.appendChild(questionDiv);
-                }
-            }
-
-            // Handle quiz submission
+            // Quiz Submission
             if (submitButton && resultsContainer && quizForm) {
                 submitButton.addEventListener('click', () => {
                     const lang = htmlElement.getAttribute('lang') || 'de';
@@ -685,21 +995,20 @@ spec:
                     quizForm.querySelectorAll('.quiz-question').forEach((questionDiv, index) => {
                         const feedbackP = questionDiv.querySelector('.quiz-feedback');
                         feedbackP.textContent = '';
-                        feedbackP.className = 'quiz-feedback text-sm'; // Reset classes
+                        feedbackP.className = 'quiz-feedback text-sm';
 
                         const selectedOption = questionDiv.querySelector(`input[name="question-${index}"]:checked`);
                         const correctAnswerValue = questionDiv.getAttribute('data-correct-answer');
-                        const correctAnswerDisplay = questionDiv.getAttribute('data-correct-answer-display'); // Translated display value
+                        const correctAnswerDisplay = questionDiv.getAttribute('data-correct-answer-display');
 
                         if (selectedOption) {
-                            if (selectedOption.value === correctAnswerValue) { // Compare against the consistent 'de' value
+                            if (selectedOption.value === correctAnswerValue) {
                                 score++;
                                 feedbackP.textContent = translations[lang]?.['quiz.feedback.correct'] || 'Correct!';
                                 feedbackP.classList.add('quiz-correct');
                             } else {
                                 const incorrectMsg = translations[lang]?.['quiz.feedback.incorrect'] || 'Incorrect. Correct answer: ';
-                                // Extract only the prefix like 'C)' from the potentially HTML-containing answer display
-                                const answerPrefixMatch = correctAnswerDisplay?.match(/^\s*[A-Z]\)/i);
+                                const answerPrefixMatch = correctAnswerDisplay?.match(/^\\s*[A-Z]\\)/i);
                                 const answerPrefix = answerPrefixMatch ? answerPrefixMatch[0] : '';
                                 feedbackP.textContent = `${incorrectMsg}${answerPrefix}`;
                                 feedbackP.classList.add('quiz-incorrect');
@@ -710,7 +1019,6 @@ spec:
                         }
                     });
 
-                    // Display final score
                     const scorePercentage = Math.round(totalQuestions > 0 ? (score / totalQuestions) * 100 : 0);
                     const scoreTemplate = translations[lang]?.['quiz.results.score'] || 'Your score: {score} out of {total} ({percentage}%)';
                     const scoreText = scoreTemplate
@@ -723,14 +1031,13 @@ spec:
                     resultMessage.textContent = scoreText;
                     resultsContainer.appendChild(resultMessage);
 
-                    // Scroll to results
                     resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 });
             }
 
-            // Initial Page Load Translation & Theme Application
+            // Initial Page Load Actions
             translatePage(initialLang);
-            // applyTheme(userPrefersDark); // Apply theme after initial translation to ensure aria-labels are correct
+            applyTheme(userPrefersDark);
 
         }); // End DOMContentLoaded
     </script>
