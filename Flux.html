@@ -1008,7 +1008,7 @@ spec:
                                 feedbackP.classList.add('quiz-correct');
                             } else {
                                 const incorrectMsg = translations[lang]?.['quiz.feedback.incorrect'] || 'Incorrect. Correct answer: ';
-                                const answerPrefixMatch = correctAnswerDisplay?.match(/^\\s*[A-Z]\\)/i);
+                                const answerPrefixMatch = correctAnswerDisplay?.match(/^\s*[A-Z]\)/i);
                                 const answerPrefix = answerPrefixMatch ? answerPrefixMatch[0] : '';
                                 feedbackP.textContent = `${incorrectMsg}${answerPrefix}`;
                                 feedbackP.classList.add('quiz-incorrect');
